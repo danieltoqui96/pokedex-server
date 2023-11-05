@@ -1,0 +1,39 @@
+### Recuperar todos los Pokémon
+GET http://localhost:3000/pokemon
+
+### Recuperar un Pokémon por id
+GET http://localhost:3000/pokemon/651db8300af228f3e7963610
+
+### Recuperar todos los Pokémon por un tipo
+GET http://localhost:3000/pokemon?tipo=normal
+
+### Crear un Pokémon con POST
+POST http://localhost:3000/pokemon
+Content-Type: application/json
+
+{
+    "name": "feraligator",
+    "form": null,
+    "number": 284,
+    "type1": "agua",
+    "type2": "volador",
+    "sprite": "https://easycdn.es/1/poke/i/pokedex/ken/gs/160.png",
+    "hp": 70,
+    "attack": 60,
+    "defense": 62,
+    "specialAttack": 100,
+    "specialDefense": 82,
+    "speed": 80,
+    "img": null
+}
+
+### Borrar una Pokémon
+DELETE http://localhost:3000/pokemon/65481503d35ec23c299b1e4f
+
+### Actualizar una Pokémon
+PATCH http://localhost:3000/pokemon/65481503d35ec23c299b1e4f
+Content-Type: application/json
+
+{
+  "name": "bulbasaur"
+}

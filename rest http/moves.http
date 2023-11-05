@@ -1,0 +1,33 @@
+### Recuperar todos los movimientos
+GET http://localhost:3000/moves
+
+### Recuperar un movimiento por id
+GET http://localhost:3000/moves/6548211649402378633eecea
+
+### Recuperar todos los movimientos por un tipo
+GET http://localhost:3000/moves?tipo=normal
+
+### Crear un movimiento con POST
+POST http://localhost:3000/moves
+Content-Type: application/json
+
+{
+    "name": "henkidama ",
+    "type": "fuego",
+    "class": "especial",
+    "power": 200,
+    "accuracy": 100,
+    "pp": 5
+}
+
+### Borrar una movimiento
+DELETE http://localhost:3000/moves/6548210a3ab2a3b1f92a776f
+
+### Actualizar una movimiento
+PATCH http://localhost:3000/moves/654824c709d3eb2a758bab51
+Content-Type: application/json
+
+{
+  "pp": 10
+}
+
