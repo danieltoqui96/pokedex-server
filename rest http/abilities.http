@@ -1,0 +1,29 @@
+### Recuperar todos las habilidades
+GET http://localhost:3000/abilities
+
+### Recuperar una habilidad por id
+GET http://localhost:3000/abilities/6548211649402378633eecea
+
+### Recuperar todas las habilidades por nombre
+GET http://localhost:3000/abilities?nombre=int
+
+### Crear una habilidad
+POST http://localhost:3000/abilities
+Content-Type: application/json
+
+{
+    "nameSp": "intimidacion",
+    "nameEn": "intimidate"
+}
+
+### Borrar una habilidad
+DELETE http://localhost:3000/abilities/654837ee4155894278a57eb9
+
+### Actualizar una habilidad
+PATCH http://localhost:3000/abilities/654838054155894278a57eba
+Content-Type: application/json
+
+{
+  "nameEn": "onda vital"
+}
+

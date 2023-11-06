@@ -23,7 +23,8 @@ const types = [
 
 const pokemonSchema = z.object({
   number: z.number().int().positive(),
-  name: z.string().min(1),
+  nameSp: z.string().min(1),
+  nameEn: z.string().min(1),
   form: z.string().nullable(),
   type1: z.enum(types),
   type2: z.enum(types).nullable(),

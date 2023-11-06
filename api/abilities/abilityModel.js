@@ -11,14 +11,13 @@ const client = new MongoClient(process.env.MONGODB_URI, {
 
 async function connect() {
   await client.connect();
-  return client.db('pokemondb').collection('moves');
+  return client.db('pokemondb').collection('abilities');
 }
 
-export class MoveModel {
-  static async getAll({ tipo, nombre }) {
+export class AbilityModel {
+  static async getAll({ nombre }) {
     const db = await connect();
     let query = {};
-    if (tipo) query.type = { $regex: new RegExp(`${tipo}`, 'i') };
     if (nombre)
       query.$or = [
         { nameSp: { $regex: new RegExp(`${nombre}`, 'i') } },

@@ -24,7 +24,8 @@ const types = [
 const classes = ['físico', 'especial', 'estado'];
 
 const moveSchema = z.object({
-  name: z.string().min(1),
+  nameSp: z.string().min(1),
+  nameEn: z.string().min(1),
   type: z.enum(types),
   class: z.enum(classes),
   power: z.number().int().positive(),

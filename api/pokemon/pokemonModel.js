@@ -20,10 +20,14 @@ export class PokemonModel {
     let query = {};
     if (tipo)
       query.$or = [
-        { type1: tipo.toLowerCase() },
-        { type2: tipo.toLowerCase() },
+        { type1: { $regex: new RegExp(`${tipo}`, 'i') } },
+        { type2: { $regex: new RegExp(`${tipo}`, 'i') } },
       ];
-    if (nombre) query.name = nombre.toLowerCase();
+    if (nombre)
+      query.$or = [
+        { nameSp: { $regex: new RegExp(`${nombre}`, 'i') } },
+        { nameEn: { $regex: new RegExp(`${nombre}`, 'i') } },
+      ];
     return db.find(query).sort({ number: 1 }).toArray();
   }
 
