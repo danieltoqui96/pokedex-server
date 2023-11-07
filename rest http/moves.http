@@ -5,24 +5,26 @@ GET http://localhost:3000/moves
 GET http://localhost:3000/moves/6548211649402378633eecea
 
 ### Recuperar todos los movimientos por tipo y nombre
-GET http://localhost:3000/moves?nombre=o&&tipo=fu
+GET http://localhost:3000/moves?nombre=a&&tipo=en
 
 ### Crear un movimiento
 POST http://localhost:3000/moves
 Content-Type: application/json
 
 {
-    "nameSp": "kame hame ha",
-    "nameEn": "onda vital",
-    "type": "agua",
-    "class": "especial",
-    "power": 200,
+    "nameSp": "Malicioso",
+    "nameEn": "Leer",
+    "type": "normal",
+    "class": "estado",
+    "power": null,
     "accuracy": 100,
-    "pp": 5
+    "pp": 30,
+    "description": "Intimida al objetivo con una mirada torva para reducir su Defensa.",
+    "mt": null
 }
 
 ### Borrar un movimiento
-DELETE http://localhost:3000/moves/65482f6b04de6c92661b425b
+DELETE http://localhost:3000/moves/65482f777d70a0397d93b7f2
 
 ### Actualizar un movimiento
 PATCH http://localhost:3000/moves/65482f777d70a0397d93b7f2

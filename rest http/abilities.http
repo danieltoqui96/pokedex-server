@@ -5,25 +5,26 @@ GET http://localhost:3000/abilities
 GET http://localhost:3000/abilities/6548211649402378633eecea
 
 ### Recuperar todas las habilidades por nombre
-GET http://localhost:3000/abilities?nombre=int
+GET http://localhost:3000/abilities?nombre=i
 
 ### Crear una habilidad
 POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-    "nameSp": "intimidacion",
-    "nameEn": "intimidate"
+    "nameSp": "Clorofila",
+    "nameEn": "Chlorophyll ",
+    "description": "Aumenta su Velocidad cuando hace sol."
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/654837ee4155894278a57eb9
+DELETE http://localhost:3000/abilities/6548386d4155894278a57ebb
 
 ### Actualizar una habilidad
-PATCH http://localhost:3000/abilities/654838054155894278a57eba
+PATCH http://localhost:3000/abilities/654932a93b25fe649982bd43
 Content-Type: application/json
 
 {
-  "nameEn": "onda vital"
+  "nameEn": "Chlorophyll"
 }
 

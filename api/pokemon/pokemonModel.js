@@ -18,16 +18,8 @@ export class PokemonModel {
   static async getAll({ tipo, nombre }) {
     const db = await connect();
     let query = {};
-    if (tipo)
-      query.$or = [
-        { type1: { $regex: new RegExp(`${tipo}`, 'i') } },
-        { type2: { $regex: new RegExp(`${tipo}`, 'i') } },
-      ];
-    if (nombre)
-      query.$or = [
-        { nameSp: { $regex: new RegExp(`${nombre}`, 'i') } },
-        { nameEn: { $regex: new RegExp(`${nombre}`, 'i') } },
-      ];
+    if (tipo) query.types = { $regex: new RegExp(`${tipo}`, 'i') };
+    if (nombre) query.name = { $regex: new RegExp(`${nombre}`, 'i') };
     return db.find(query).sort({ number: 1 }).toArray();
   }
 
@@ -38,6 +30,7 @@ export class PokemonModel {
 
   static async create({ input }) {
     const db = await connect();
+    input.lastModified = new Date();
     const { insertedId } = await db.insertOne(input);
     return { _id: insertedId, ...input };
   }
@@ -50,6 +43,7 @@ export class PokemonModel {
 
   static async update({ id, input }) {
     const db = await connect();
+    input.lastModified = new Date();
     const result = await db.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },

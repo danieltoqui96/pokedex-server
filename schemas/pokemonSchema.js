@@ -21,21 +21,23 @@ const types = [
   'hada',
 ];
 
-const pokemonSchema = z.object({
-  number: z.number().int().positive(),
-  nameSp: z.string().min(1),
-  nameEn: z.string().min(1),
-  form: z.string().nullable(),
-  type1: z.enum(types),
-  type2: z.enum(types).nullable(),
+const statsSchema = z.object({
   hp: z.number().int().positive(),
   attack: z.number().int().positive(),
   defense: z.number().int().positive(),
   specialAttack: z.number().int().positive(),
   specialDefense: z.number().int().positive(),
   speed: z.number().int().positive(),
+});
+
+const pokemonSchema = z.object({
+  number: z.number().int().positive(),
+  name: z.string().min(1),
+  form: z.string().nullable(),
+  region: z.string(),
+  types: z.array(z.enum(types)), // Array de tipos
+  stats: statsSchema, // Objeto de estadísticas
   sprite: z.string().url().nullable(),
-  img: z.string().url().nullable(),
 });
 
 export function validatePokemon(input) {

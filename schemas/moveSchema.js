@@ -1,4 +1,4 @@
-import z from 'zod';
+import z, { string } from 'zod';
 
 const types = [
   'normal',
@@ -28,9 +28,11 @@ const moveSchema = z.object({
   nameEn: z.string().min(1),
   type: z.enum(types),
   class: z.enum(classes),
-  power: z.number().int().positive(),
+  power: z.number().int().positive().nullable(),
   accuracy: z.number().int().positive(),
   pp: z.number().int().positive(),
+  description: z.string().nullable(),
+  mt: z.number().int().nullable(),
 });
 
 export function validateMove(input) {

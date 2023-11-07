@@ -2,39 +2,39 @@
 GET http://localhost:3000/pokemon
 
 ### Recuperar un Pokémon por id
-GET http://localhost:3000/pokemon/651db8300af228f3e7963610
+GET http://localhost:3000/pokemon/6549aa9e19bcd6228c60797d
 
 ### Recuperar todos los Pokémon por tipo y nombre
-GET http://localhost:3000/pokemon?tipo=a&&nombre=go
+GET http://localhost:3000/pokemon?nombre=c&&tipo=es
 
 ### Crear un Pokémon
 POST http://localhost:3000/pokemon
 Content-Type: application/json
 
 {
-    "nameSp": "goku ",
-    "nameEn": "kakaroto",
-    "form": null,
-    "number": 284,
-    "type1": "fuego",
-    "type2": "lucha",
-    "sprite": "https://easycdn.es/1/poke/i/pokedex/ken/gs/160.png",
-    "hp": 70,
-    "attack": 60,
-    "defense": 62,
-    "specialAttack": 100,
-    "specialDefense": 82,
-    "speed": 80,
-    "img": null
+  "number": 150,
+  "name": "Mewtwo",
+  "form": null,
+  "region": "Kanto",
+  "types": ["psíquico"],
+  "stats": {
+    "hp": 106,
+    "attack": 110,
+    "defense": 90,
+    "specialAttack": 154,
+    "specialDefense": 90,
+    "speed": 130
+  },
+  "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/654824b109d3eb2a758bab50
+DELETE http://localhost:3000/pokemon/65499320632d7143e88631d0
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/65482aea09d2543f70e39f72
+PATCH http://localhost:3000/pokemon/6549aa9e19bcd6228c60797d
 Content-Type: application/json
 
 {
-  "nameSp": "Feraligatr"
+  "types": ["psíquico"]
 }
