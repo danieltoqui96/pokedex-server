@@ -23,7 +23,7 @@ export class AbilityModel {
         { nameSp: { $regex: new RegExp(`${nombre}`, 'i') } },
         { nameEn: { $regex: new RegExp(`${nombre}`, 'i') } },
       ];
-    return db.find(query).toArray();
+    return db.find(query).sort({ nameSp: 1 }).toArray();
   }
 
   static async getById({ id }) {
@@ -33,6 +33,7 @@ export class AbilityModel {
 
   static async create({ input }) {
     const db = await connect();
+    input.lastModified = new Date();
     const { insertedId } = await db.insertOne(input);
     return { _id: insertedId, ...input };
   }
@@ -45,6 +46,7 @@ export class AbilityModel {
 
   static async update({ id, input }) {
     const db = await connect();
+    input.lastModified = new Date();
     const result = await db.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },

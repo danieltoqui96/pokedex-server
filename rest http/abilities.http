@@ -12,13 +12,13 @@ POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-    "nameSp": "Clorofila",
-    "nameEn": "Chlorophyll ",
-    "description": "Aumenta su Velocidad cuando hace sol."
+      "nameSp": "Pies Rápidos",
+      "nameEn": "Quick Feet",
+      "description": "Aumenta su Velocidad si sufre problemas de estado."
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/6548386d4155894278a57ebb
+DELETE http://localhost:3000/abilities/654931cb3b25fe649982bd40
 
 ### Actualizar una habilidad
 PATCH http://localhost:3000/abilities/654932a93b25fe649982bd43

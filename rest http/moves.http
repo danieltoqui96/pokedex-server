@@ -2,7 +2,7 @@
 GET http://localhost:3000/moves
 
 ### Recuperar un movimiento por id
-GET http://localhost:3000/moves/6548211649402378633eecea
+GET http://localhost:3000/moves/65492c5ba4d9381cdfefbd02
 
 ### Recuperar todos los movimientos por tipo y nombre
 GET http://localhost:3000/moves?nombre=a&&tipo=en
@@ -12,19 +12,19 @@ POST http://localhost:3000/moves
 Content-Type: application/json
 
 {
-    "nameSp": "Malicioso",
-    "nameEn": "Leer",
-    "type": "normal",
-    "class": "estado",
-    "power": null,
-    "accuracy": 100,
-    "pp": 30,
-    "description": "Intimida al objetivo con una mirada torva para reducir su Defensa.",
-    "mt": null
+  "nameSp": "Golpe roca",
+  "nameEn": "Rock Smash ",
+  "type": "lucha",
+  "class": "físico",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 15,
+      "description": "Propina un gran puñetazo que puede reducir la Defensa del objetivo.",
+      "mt": null
 }
 
 ### Borrar un movimiento
-DELETE http://localhost:3000/moves/65482f777d70a0397d93b7f2
+DELETE http://localhost:3000/moves/654aef777f9a476e1d77ea6f
 
 ### Actualizar un movimiento
 PATCH http://localhost:3000/moves/65482f777d70a0397d93b7f2

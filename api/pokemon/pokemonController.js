@@ -108,7 +108,6 @@ export class PokemonController {
         message: 'Invalid Pokemon data',
         error: JSON.parse(result.error.message),
       });
-
     try {
       const { id } = req.params;
       const updatedPokemon = await PokemonModel.update({
