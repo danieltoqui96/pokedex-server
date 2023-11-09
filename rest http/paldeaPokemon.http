@@ -5,7 +5,7 @@ GET http://localhost:3000/paldeaPokemon
 GET http://localhost:3000/paldeaPokemon/654c32e272dcad4d1fefc13a
 
 ### Recuperar todos los Pokémon por tipo y nombre
-GET http://localhost:3000/paldeaPokemon?nombre=c&&tipo=es
+GET http://localhost:3000/paldeaPokemon?tipo=elé&&nombre=P
 
 ### Crear un Pokémon
 POST http://localhost:3000/paldeaPokemon

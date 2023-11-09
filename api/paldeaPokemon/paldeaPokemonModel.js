@@ -15,34 +15,54 @@ async function connect(collection) {
 }
 
 export class PaldeaPokemonModel {
-  static async getAll() {
-    const collectionPaldea = await connect('paldeaPokemon');
-    const collectionPokemon = await connect('pokemon');
+  static async getAll({ tipo, nombre }) {
+    const [pokemonCollection, paldeaCollection] = await Promise.all([
+      connect('pokemon'),
+      connect('paldeaPokemon'),
+    ]);
 
-    // Obtén todos los documentos de Paldea
-    const paldeas = await collectionPaldea.find().toArray();
+    const paldeaData = await paldeaCollection
+      .find()
+      .project({ paldeaNumber: 1, noroteoNumber: 1, pokemonId: 1 })
+      .toArray();
 
-    // Para cada documento de Paldea, obtén el documento de Pokémon correspondiente
-    const promises = paldeas.map(async (paldea) => {
-      const pokemon = await collectionPokemon.findOne(
+    const pokemonDataPromises = paldeaData.map(async (paldea) => {
+      const pokemonData = await pokemonCollection.findOne(
         { _id: new ObjectId(paldea.pokemonId) },
-        { projection: { number: 1, name: 1, types: 1, sprite: 1 } } // Proyección
+        {
+          projection: {
+            number: 1,
+            name: 1,
+            form: 1,
+            types: 1,
+            sprite: 1,
+          },
+        }
       );
-      return { ...paldea, pokemon };
+      return { ...paldea, pokemonId: pokemonData };
     });
 
-    // Espera a que todas las promesas se resuelvan
-    const results = await Promise.all(promises);
+    let results = await Promise.all(pokemonDataPromises);
+
+    if (tipo)
+      results = results.filter((result) =>
+        result.pokemonId.types.some((type) => type.includes(tipo.toLowerCase()))
+      );
+
+    if (nombre)
+      results = results.filter((result) =>
+        result.pokemonId.name.toLowerCase().includes(nombre.toLowerCase())
+      );
 
     return results;
   }
 
   static async getById({ id }) {
     const [
-      collectionPaldea,
-      collectionPokemon,
-      collectionAbilities,
-      collectionMoves,
+      paldeaCollection,
+      pokemonCollection,
+      abilitiesCollection,
+      movesCollection,
     ] = await Promise.all([
       connect('paldeaPokemon'),
       connect('pokemon'),
@@ -50,39 +70,40 @@ export class PaldeaPokemonModel {
       connect('moves'),
     ]);
 
-    const pokemonPaldea = await collectionPaldea.findOne({
+    const paldeaData = await paldeaCollection.findOne({
       _id: new ObjectId(id),
     });
-    const pokemonPromise = collectionPokemon.findOne({
-      _id: new ObjectId(pokemonPaldea.pokemonId),
+    const pokemonDataPromise = pokemonCollection.findOne({
+      _id: new ObjectId(paldeaData.pokemonId),
     });
-    const abilitiesPromise = Promise.all(
-      pokemonPaldea.abilities.map((id) =>
-        collectionAbilities.findOne({ _id: new ObjectId(id) })
+    const abilitiesDataPromise = Promise.all(
+      paldeaData.abilities.map((abilityId) =>
+        abilitiesCollection.findOne({ _id: new ObjectId(abilityId) })
       )
     );
-    const hiddenAbilityPromise = collectionAbilities.findOne({
-      _id: new ObjectId(pokemonPaldea.hidenAbility),
+    const hiddenAbilityDataPromise = abilitiesCollection.findOne({
+      _id: new ObjectId(paldeaData.hidenAbility),
     });
-    const movesPromise = Promise.all(
-      pokemonPaldea.moves.map((id) =>
-        collectionMoves.findOne({ _id: new ObjectId(id) })
+    const movesDataPromise = Promise.all(
+      paldeaData.moves.map((moveId) =>
+        movesCollection.findOne({ _id: new ObjectId(moveId) })
       )
     );
 
-    const [pokemon, abilities, hiddenAbility, moves] = await Promise.all([
-      pokemonPromise,
-      abilitiesPromise,
-      hiddenAbilityPromise,
-      movesPromise,
-    ]);
+    const [pokemonData, abilitiesData, hiddenAbilityData, movesData] =
+      await Promise.all([
+        pokemonDataPromise,
+        abilitiesDataPromise,
+        hiddenAbilityDataPromise,
+        movesDataPromise,
+      ]);
 
     return {
-      ...pokemonPaldea,
-      pokemonId: pokemon,
-      abilities,
-      hiddenAbility,
-      moves,
+      ...paldeaData,
+      pokemonId: pokemonData,
+      abilities: abilitiesData,
+      hiddenAbility: hiddenAbilityData,
+      moves: movesData,
     };
   }
 

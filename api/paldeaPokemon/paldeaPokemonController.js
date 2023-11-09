@@ -7,12 +7,12 @@ import { randomUUID } from 'node:crypto';
 
 export class PaldeaPokemonController {
   static async getAll(req, res) {
-    const { nombre } = req.query;
+    const { tipo, nombre } = req.query;
     try {
-      const allPokemon = await PaldeaPokemonModel.getAll({ nombre });
+      const allPokemon = await PaldeaPokemonModel.getAll({ tipo, nombre });
       res.json({
         count: allPokemon.length,
-        filters: { nombre },
+        filters: { tipo, nombre },
         timestamp: new Date(),
         data: allPokemon,
       });
