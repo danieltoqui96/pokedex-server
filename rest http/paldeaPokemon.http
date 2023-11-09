@@ -1,0 +1,33 @@
+### Recuperar todos los Pokémon
+GET http://localhost:3000/paldeaPokemon
+
+### Recuperar un Pokémon por id
+GET http://localhost:3000/paldeaPokemon/654c32e272dcad4d1fefc13a
+
+### Recuperar todos los Pokémon por tipo y nombre
+GET http://localhost:3000/paldeaPokemon?nombre=c&&tipo=es
+
+### Crear un Pokémon
+POST http://localhost:3000/paldeaPokemon
+Content-Type: application/json
+
+{
+  "paldeaNumber": 74,
+  "noroteoNumber": 21,
+  "pokemonId": "6549aa9519bcd6228c60797c",
+  "abilities": ["654af49b5a40047cf7c99e6c","654af4d55a40047cf7c99e6e"],
+  "hiddenAbility": "654af50f5a40047cf7c99e70",
+  "moves": ["654af0a37f9a476e1d77ea70","65492fbcd1ed63631745371d", "654aef457f9a476e1d77ea6e"],
+  "description": "Cuando se enfada, este Pokémon descarga la energía que almacena en el interior de las bolsas de las mejillas."
+}
+
+### Borrar un Pokémon
+DELETE http://localhost:3000/paldeaPokemon/654c223a99019160c79a3c02
+
+### Actualizar un Pokémon
+PATCH http://localhost:3000/paldeaPokemon/654c223a99019160c79a3c02
+Content-Type: application/json
+
+{
+  "types": ["psíquico"]
+}

@@ -19,8 +19,8 @@ Content-Type: application/json
   "power": 40,
   "accuracy": 100,
   "pp": 15,
-      "description": "Propina un gran puñetazo que puede reducir la Defensa del objetivo.",
-      "mt": null
+  "description": "Propina un gran puñetazo que puede reducir la Defensa del objetivo.",
+  "mt": null
 }
 
 ### Borrar un movimiento
