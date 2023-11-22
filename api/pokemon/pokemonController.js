@@ -1,3 +1,4 @@
+// Importamos las dependencias necesarias
 import { PokemonModel } from './pokemonModel.js';
 import {
   validatePokemon,
@@ -5,15 +6,17 @@ import {
 } from '../../schemas/pokemonSchema.js';
 import { randomUUID } from 'node:crypto';
 
+// Definimos la clase PokemonController
 export class PokemonController {
+  // Método para obtener todos los Pokémon
   static async getAll(req, res) {
     const { tipo, nombre } = req.query;
     try {
       const allPokemon = await PokemonModel.getAll({ tipo, nombre });
       res.json({
+        timestamp: new Date().toLocaleString(),
         count: allPokemon.length,
         filters: { tipo, nombre },
-        timestamp: new Date(),
         data: allPokemon,
       });
     } catch (error) {
@@ -27,6 +30,7 @@ export class PokemonController {
     }
   }
 
+  // Método para obtener un Pokémon por su ID
   static async getById(req, res) {
     const { id } = req.params;
     try {
@@ -38,7 +42,7 @@ export class PokemonController {
         });
       res.json({
         status: 'success',
-        timestamp: new Date(),
+        timestamp: new Date().toLocaleString(),
         data: pokemon,
       });
     } catch (error) {
@@ -52,6 +56,7 @@ export class PokemonController {
     }
   }
 
+  // Método para crear un nuevo Pokémon
   static async create(req, res) {
     const result = validatePokemon(req.body);
     if (!result.success)
@@ -65,7 +70,7 @@ export class PokemonController {
       res.status(201).json({
         status: 'success',
         message: 'Pokémon created successfully',
-        timestamp: new Date(),
+        timestamp: new Date().toLocaleString(),
         data: newPokemon,
       });
     } catch (error) {
@@ -79,6 +84,7 @@ export class PokemonController {
     }
   }
 
+  // Método para eliminar un Pokémon por su ID
   static async delete(req, res) {
     const { id } = req.params;
     try {
@@ -100,6 +106,7 @@ export class PokemonController {
     }
   }
 
+  // Método para actualizar un Pokémon por su ID
   static async update(req, res) {
     const result = validatePartialPokemon(req.body);
     if (!result.success)
@@ -117,7 +124,7 @@ export class PokemonController {
       res.json({
         status: 'success',
         message: 'Pokémon updated successfully',
-        timestamp: new Date(),
+        timestamp: new Date().toLocaleString(),
         data: updatedPokemon,
       });
     } catch (error) {

@@ -29,12 +29,12 @@ Content-Type: application/json
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/65499320632d7143e88631d0
+DELETE http://localhost:3000/pokemon/6549aa9e19bcd6228c60797d
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/6549aa9e19bcd6228c60797d
+PATCH http://localhost:3000/pokemon/655e498d9b4b9c78ec13e1f5
 Content-Type: application/json
 
 {
-  "types": ["psíquico"]
+  "types": ["psíquico", "fuego"]
 }

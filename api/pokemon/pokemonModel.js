@@ -1,6 +1,8 @@
+// Importamos las dependencias necesarias
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 import 'dotenv/config';
 
+// Creamos una nueva instancia de MongoClient con la URI de MongoDB y las opciones del servidor
 const client = new MongoClient(process.env.MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -9,12 +11,15 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   },
 });
 
+// Función para conectar a la base de datos y obtener la colección 'pokemon'
 async function connect() {
   await client.connect();
   return client.db('pokemondb').collection('pokemon');
 }
 
+// Definimos la clase PokemonModel
 export class PokemonModel {
+  // Método para obtener todos los Pokémon
   static async getAll({ tipo, nombre }) {
     const db = await connect();
     let query = {};
@@ -23,27 +28,31 @@ export class PokemonModel {
     return db.find(query).sort({ number: 1 }).toArray();
   }
 
+  // Método para obtener un Pokémon por su ID
   static async getById({ id }) {
     const db = await connect();
     return db.findOne({ _id: new ObjectId(id) });
   }
 
+  // Método para crear un nuevo Pokémon
   static async create({ input }) {
     const db = await connect();
-    input.lastModified = new Date();
+    input.lastModified = new Date().toLocaleString();
     const { insertedId } = await db.insertOne(input);
     return { _id: insertedId, ...input };
   }
 
+  // Método para eliminar un Pokémon por su ID
   static async delete({ id }) {
     const db = await connect();
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
     return deletedCount > 0;
   }
 
+  // Método para actualizar un Pokémon por su ID
   static async update({ id, input }) {
     const db = await connect();
-    input.lastModified = new Date();
+    input.lastModified = new Date().toLocaleString();
     const result = await db.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
