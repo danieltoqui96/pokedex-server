@@ -11,3 +11,4 @@ pokemonRouter.get('/:id', PokemonController.getById); // Obtiene un Pokémon por
 pokemonRouter.post('/', PokemonController.create); // Crea un nuevo Pokémon
 pokemonRouter.delete('/:id', PokemonController.delete); // Elimina un Pokémon por su ID
 pokemonRouter.patch('/:id', PokemonController.update); // Actualiza un Pokémon por su ID
+pokemonRouter.patch('/game/:id', PokemonController.addGame);

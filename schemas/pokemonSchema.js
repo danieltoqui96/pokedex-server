@@ -1,43 +1,23 @@
 import z from 'zod';
-
-const types = [
-  'normal',
-  'fuego',
-  'agua',
-  'planta',
-  'eléctrico',
-  'hielo',
-  'lucha',
-  'veneno',
-  'tierra',
-  'volador',
-  'psíquico',
-  'bicho',
-  'roca',
-  'fantasma',
-  'dragón',
-  'siniestro',
-  'acero',
-  'hada',
-];
-
-const statsSchema = z.object({
-  hp: z.number().int().positive(),
-  attack: z.number().int().positive(),
-  defense: z.number().int().positive(),
-  specialAttack: z.number().int().positive(),
-  specialDefense: z.number().int().positive(),
-  speed: z.number().int().positive(),
-});
+import { pokemonGenerations, pokemonTypes } from '../utils/constants.js';
+import { pokemonGameSchema } from './pokemonGameSchema.js';
 
 const pokemonSchema = z.object({
-  number: z.number().int().positive(),
+  nationalNumber: z.number().int().positive(),
   name: z.string().min(1),
   form: z.string().nullable(),
-  region: z.string(),
-  types: z.array(z.enum(types)), // Array de tipos
-  stats: statsSchema, // Objeto de estadísticas
+  generation: z.string(z.enum(pokemonGenerations)), // Array de generaciones
+  types: z.array(z.enum(pokemonTypes)), // Array de tipos
+  stats: z.object({
+    hp: z.number().int().positive(),
+    attack: z.number().int().positive(),
+    defense: z.number().int().positive(),
+    specialAttack: z.number().int().positive(),
+    specialDefense: z.number().int().positive(),
+    speed: z.number().int().positive(),
+  }), // Objeto de estadísticas
   sprite: z.string().url().nullable(),
+  games: z.array(pokemonGameSchema), // Array de datos de la región
 });
 
 export function validatePokemon(input) {

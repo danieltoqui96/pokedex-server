@@ -60,4 +60,31 @@ export class PokemonModel {
     );
     return result;
   }
+
+  static async addGame({ id, input }) {
+    const db = await connect();
+    input.lastModified = new Date().toLocaleString();
+
+    // Obtén el Pokémon por su ID
+    const pokemon = await db.findOne({ _id: new ObjectId(id) });
+
+    // Comprueba si el juego ya existe en el array 'games'
+    const gameExists = pokemon.games.some(
+      (game) => game.pokemonGames === input.pokemonGames
+    );
+
+    // Si el juego ya existe, devuelve un error
+    if (gameExists) {
+      throw new Error('This game already exists for this Pokémon');
+    }
+
+    // Si el juego no existe, añádelo al array 'games'
+    const result = await db.findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $push: { games: input } },
+      { returnDocument: 'after' }
+    );
+
+    return result;
+  }
 }

@@ -12,9 +12,9 @@ POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-      "nameSp": "Pies Rápidos",
-      "nameEn": "Quick Feet",
-      "description": "Aumenta su Velocidad si sufre problemas de estado."
+      "nameSp": "Muro mágico",
+      "nameEn": "Magic Guard",
+      "description": null
 }
 
 ### Borrar una habilidad

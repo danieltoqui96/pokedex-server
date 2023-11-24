@@ -4,6 +4,10 @@ import {
   validatePokemon,
   validatePartialPokemon,
 } from '../../schemas/pokemonSchema.js';
+import {
+  validatePokemonGame,
+  validatePartialPokemonGame,
+} from '../../schemas/pokemonGameSchema.js';
 import { randomUUID } from 'node:crypto';
 
 // Definimos la clase PokemonController
@@ -133,6 +137,43 @@ export class PokemonController {
       res.status(500).json({
         status: 'error',
         message: 'An error occurred while updating the Pokémon',
+        errorId: errorId,
+      });
+    }
+  }
+
+  static async addGame(req, res) {
+    const result = validatePokemonGame(req.body);
+    if (!result.success)
+      return res.status(400).json({
+        status: 'error',
+        message: 'Invalid game data',
+        error: JSON.parse(result.error.message),
+      });
+    try {
+      const { id } = req.params;
+      const updatedPokemon = await PokemonModel.addGame({
+        id,
+        input: result.data,
+      });
+      res.json({
+        status: 'success',
+        message: 'Game added successfully',
+        timestamp: new Date().toLocaleString(),
+        data: updatedPokemon,
+      });
+    } catch (error) {
+      if (error.message === 'This game already exists for this Pokémon') {
+        return res.status(400).json({
+          status: 'error',
+          message: 'This game already exists for this Pokémon',
+        });
+      }
+      const errorId = randomUUID();
+      console.error(`Error ID: ${errorId}`, error);
+      res.status(500).json({
+        status: 'error',
+        message: 'An error occurred while adding the game',
         errorId: errorId,
       });
     }

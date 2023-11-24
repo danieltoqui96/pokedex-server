@@ -1,40 +1,51 @@
 ### Recuperar todos los Pokémon
-GET http://localhost:3000/pokemon
+GET http://localhost:3000/pokemon?nombre=&&tipo=
 
 ### Recuperar un Pokémon por id
-GET http://localhost:3000/pokemon/6549aa9e19bcd6228c60797d
-
-### Recuperar todos los Pokémon por tipo y nombre
-GET http://localhost:3000/pokemon?nombre=c&&tipo=es
+GET http://localhost:3000/pokemon/6560ff14a983f8f9fdee4bfe
 
 ### Crear un Pokémon
 POST http://localhost:3000/pokemon
 Content-Type: application/json
 
 {
-  "number": 150,
-  "name": "Mewtwo",
+  "nationalNumber": 65,
+  "name": "Alakazam",
   "form": null,
-  "region": "Kanto",
+  "generation": "i",
   "types": ["psíquico"],
   "stats": {
-    "hp": 106,
-    "attack": 110,
-    "defense": 90,
-    "specialAttack": 154,
-    "specialDefense": 90,
-    "speed": 130
+    "hp": 55,
+    "attack": 50,
+    "defense": 45,
+    "specialAttack": 135,
+    "specialDefense": 95,
+    "speed": 120
   },
-  "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
+  "sprite": "https://images.wikidexcdn.net/mwuploads/wikidex/f/f5/Alakazam.png",
+  "games": []
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/6549aa9e19bcd6228c60797d
+DELETE http://localhost:3000/pokemon/6560f0973092cadc2b8519fc
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/655e498d9b4b9c78ec13e1f5
+PATCH http://localhost:3000/pokemon/6560ff14a983f8f9fdee4bfe
 Content-Type: application/json
 
 {
-  "types": ["psíquico", "fuego"]
+  "games": []
+}
+
+
+### Agregar un juego de Pokemon
+PATCH http://localhost:3000/pokemon/game/6560ff14a983f8f9fdee4bfe
+Content-Type: application/json
+
+{
+  "pokemonGames": "Escarlata y Púrpura",
+  "pokedex": null,
+  "abilities": ["6561057cd36e20840955f51c", "656100ea581c57a0f0af570d"],
+  "hiddenAbility": "656105b7d36e20840955f51d",
+  "moves": null
 }
