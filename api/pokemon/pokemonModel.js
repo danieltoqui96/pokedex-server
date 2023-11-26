@@ -31,7 +31,9 @@ export class PokemonModel {
   // Método para obtener un Pokémon por su ID
   static async getById({ id }) {
     const db = await connect();
-    return db.findOne({ _id: new ObjectId(id) });
+    const pokemon = await db.findOne({ _id: new ObjectId(id) });
+    if (!pokemon) throw new Error('NOT_FOUND');
+    return pokemon;
   }
 
   // Método para crear un nuevo Pokémon
@@ -46,31 +48,35 @@ export class PokemonModel {
   static async delete({ id }) {
     const db = await connect();
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
-    return deletedCount > 0;
+    if (deletedCount === 0) throw new Error('NOT_FOUND');
   }
 
   // Método para actualizar un Pokémon por su ID
   static async update({ id, input }) {
     const db = await connect();
     input.lastModified = new Date().toLocaleString();
-    const result = await db.findOneAndUpdate(
+    const updatedPokemon = await db.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
       { returnDocument: 'after' }
     );
-    return result;
+    if (!updatedPokemon) throw new Error('NOT_FOUND');
+    return updatedPokemon;
   }
 
   // Método para añadir un juego a un Pokémon
   static async addGame({ id, input }) {
     const db = await connect();
+    // Buscando Pokémon
     const pokemon = await db.findOne({ _id: new ObjectId(id) });
-    if (!pokemon) throw new Error('Pokémon no existe');
+    if (!pokemon) throw new Error('NOT_FOUND');
+    // Buscando juego
     const gameExists = pokemon.games.some(
       (game) => game.pokemonGames === input.pokemonGames
     );
-    if (gameExists) throw new Error('juego ya existe');
-    const result = await db.findOneAndUpdate(
+    if (gameExists) throw new Error('GAME_EXISTS');
+    // Añadiendo juego
+    const updatedPokemon = await db.findOneAndUpdate(
       { _id: new ObjectId(id) },
       {
         $push: { games: input },
@@ -78,20 +84,23 @@ export class PokemonModel {
       },
       { returnDocument: 'after' }
     );
-    return result;
+    return updatedPokemon;
   }
 
   // Método para eliminar un juego de un Pokémon
-  static async deleteGame({ id, gameName }) {
+  static async deleteGame({ id, input }) {
     const db = await connect();
+    // Buscando Pokémon
     const pokemon = await db.findOne({ _id: new ObjectId(id) });
-    if (!pokemon) throw new Error('Pokémon no existe');
+    if (!pokemon) throw new Error('NOT_FOUND_POKEMON');
+    // Buscando juego
     const gameIndex = pokemon.games.findIndex(
-      (game) => game.pokemonGames === gameName
+      (game) => game.pokemonGames === input.pokemonGames
     );
-    if (gameIndex === -1) throw new Error('juego no existe');
+    if (gameIndex === -1) throw new Error('NOT_FOUND_GAME');
+    // Elimina juego
     pokemon.games.splice(gameIndex, 1);
-    const result = await db.findOneAndUpdate(
+    const updatedPokemon = await db.findOneAndUpdate(
       { _id: new ObjectId(id) },
       {
         $set: {
@@ -101,22 +110,23 @@ export class PokemonModel {
       },
       { returnDocument: 'after' }
     );
-    return result;
+    return updatedPokemon;
   }
 
   // Método para editar un juego de un Pokémon
-  static async editGame({ id, gameName, gameData }) {
+  static async editGame({ id, input }) {
     const db = await connect();
+    // Buscando Pokémon
     const pokemon = await db.findOne({ _id: new ObjectId(id) });
-    if (!pokemon) throw new Error('Pokémon no existe');
+    if (!pokemon) throw new Error('NOT_FOUND_POKEMON');
+    // Buscando juego
     const gameIndex = pokemon.games.findIndex(
-      (game) => game.pokemonGames === gameName
+      (game) => game.pokemonGames === input.pokemonGames
     );
-    if (gameIndex === -1) {
-      throw new Error('juego no existe');
-    }
-    pokemon.games[gameIndex] = { ...pokemon.games[gameIndex], ...gameData };
-    const result = await db.findOneAndUpdate(
+    if (gameIndex === -1) throw new Error('NOT_FOUND_GAME');
+    // Actualizando juego
+    pokemon.games[gameIndex] = { ...pokemon.games[gameIndex], ...input };
+    const updatedPokemon = await db.findOneAndUpdate(
       { _id: new ObjectId(id) },
       {
         $set: {
@@ -126,6 +136,6 @@ export class PokemonModel {
       },
       { returnDocument: 'after' }
     );
-    return result;
+    return updatedPokemon;
   }
 }

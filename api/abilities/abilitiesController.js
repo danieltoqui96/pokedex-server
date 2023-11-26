@@ -1,3 +1,4 @@
+// Importamos las dependencias necesarias
 import { AbilityModel } from './abilityModel.js';
 import {
   validateAbility,
@@ -5,110 +6,109 @@ import {
 } from '../../schemas/abilitySchema.js';
 import { randomUUID } from 'node:crypto';
 
+// Definimos la clase AbilitiesController
 export class AbilitiesController {
+  // Método para obtener todas las habilidades
   static async getAll(req, res) {
-    const { nombre } = req.query;
     try {
+      const { nombre } = req.query;
       const abilities = await AbilityModel.getAll({ nombre });
       res.json({
         count: abilities.length,
         filters: { nombre },
-        timestamp: new Date(),
         data: abilities,
       });
     } catch (error) {
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'An error occurred while retrieving the Abilities',
+        message: 'Ocurrió un error al recuperar las habilidades',
         errorId: errorId,
       });
     }
   }
 
+  // Método para obtener una habilidad por su ID
   static async getById(req, res) {
-    const { id } = req.params;
     try {
+      const { id } = req.params;
       const ability = await AbilityModel.getById({ id });
-      if (!ability)
-        return res.status(404).json({
-          status: 'error',
-          message: 'Ability not found',
-        });
       res.json({
         status: 'success',
-        timestamp: new Date(),
         data: ability,
       });
     } catch (error) {
+      if (error.message === 'NOT_FOUND')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Habilidad no encontrada',
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'An error occurred while retrieving the Ability',
+        message: 'Ocurrió un error al recuperar la habilidad',
         errorId: errorId,
       });
     }
   }
 
+  // Método para crear una nueva habilidad
   static async create(req, res) {
-    const result = validateAbility(req.body);
-    if (!result.success)
-      return res.status(400).json({
-        status: 'error',
-        message: 'Invalid Ability data',
-        error: JSON.parse(result.error.message),
-      });
     try {
+      const result = validateAbility(req.body);
+      if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const newAbility = await AbilityModel.create({ input: result.data });
       res.status(201).json({
         status: 'success',
-        message: 'Ability created successfully',
-        timestamp: new Date(),
+        message: 'Habilidad creada con éxito',
         data: newAbility,
       });
     } catch (error) {
+      if (error.message === 'INVALID_DATA')
+        return res.status(400).json({
+          status: 'error',
+          message: 'Datos de habilidad inválidos',
+          error: JSON.parse(error.result.error),
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'An error occurred while creating the Ability',
+        message: 'Ocurrió un error al crear la habilidad',
         errorId: errorId,
       });
     }
   }
 
+  // Método para eliminar una habilidad por su ID
   static async delete(req, res) {
-    const { id } = req.params;
     try {
-      const result = await AbilityModel.delete({ id });
-      if (result === false)
+      const { id } = req.params;
+      await AbilityModel.delete({ id });
+      res.json({ status: 'success', message: 'Habilidad eliminada' });
+    } catch (error) {
+      if (error.message === 'NOT_FOUND')
         return res.status(404).json({
           status: 'error',
-          message: 'Ability not found',
+          message: 'Habilidad no encontrada',
         });
-      res.json({ status: 'success', message: 'Ability deleted' });
-    } catch (error) {
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'An error occurred while deleting the Ability',
+        message: 'Ocurrió un error al eliminar la habilidad',
         errorId: errorId,
       });
     }
   }
 
+  // Método para actualizar una habilidad por su ID
   static async update(req, res) {
-    const result = validatePartialAbility(req.body);
-    if (!result.success)
-      return res.status(400).json({
-        status: 'error',
-        message: 'Invalid Ability data',
-        error: JSON.parse(result.error.message),
-      });
     try {
+      const result = validatePartialAbility(req.body);
+      if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const { id } = req.params;
       const updatedAbility = await AbilityModel.update({
         id,
@@ -116,16 +116,26 @@ export class AbilitiesController {
       });
       res.json({
         status: 'success',
-        message: 'Ability updated successfully',
-        timestamp: new Date(),
+        message: 'Habilidad actualizada con éxito',
         data: updatedAbility,
       });
     } catch (error) {
+      if (error.message === 'INVALID_DATA')
+        return res.status(400).json({
+          status: 'error',
+          message: 'Datos de habilidad inválidos',
+          error: JSON.parse(error.result.error),
+        });
+      if (error.message === 'NOT_FOUND')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Habilidad no encontrada',
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'An error occurred while updating the Ability',
+        message: 'Ocurrió un error al actualizar la habilidad',
         errorId: errorId,
       });
     }

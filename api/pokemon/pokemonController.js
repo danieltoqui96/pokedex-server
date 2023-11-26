@@ -18,14 +18,13 @@ export class PokemonController {
       const { tipo, nombre } = req.query;
       const allPokemon = await PokemonModel.getAll({ tipo, nombre });
       res.json({
-        timestamp: new Date().toLocaleString(),
         count: allPokemon.length,
         filters: { tipo, nombre },
         data: allPokemon,
       });
     } catch (error) {
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar los Pokémon',
@@ -39,19 +38,18 @@ export class PokemonController {
     try {
       const { id } = req.params;
       const pokemon = await PokemonModel.getById({ id });
-      if (!pokemon)
+      res.json({
+        status: 'success',
+        data: pokemon,
+      });
+    } catch (error) {
+      if (error.message === 'NOT_FOUND')
         return res.status(404).json({
           status: 'error',
           message: 'Pokémon no encontrado',
         });
-      res.json({
-        status: 'success',
-        timestamp: new Date().toLocaleString(),
-        data: pokemon,
-      });
-    } catch (error) {
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar los Pokémon',
@@ -62,24 +60,24 @@ export class PokemonController {
 
   // Método para crear un nuevo Pokémon
   static async create(req, res) {
-    const result = validatePokemon(req.body);
-    if (!result.success)
-      return res.status(400).json({
-        status: 'error',
-        message: 'Datos de Pokémon inválidos',
-        error: JSON.parse(result.error.message),
-      });
     try {
+      const result = validatePokemon(req.body);
+      if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const newPokemon = await PokemonModel.create({ input: result.data });
       res.status(201).json({
         status: 'success',
         message: 'Pokémon creado con éxito',
-        timestamp: new Date().toLocaleString(),
         data: newPokemon,
       });
     } catch (error) {
+      if (error.message === 'INVALID_DATA')
+        return res.status(400).json({
+          status: 'error',
+          message: 'Datos de Pokémon inválidos',
+          error: JSON.parse(error.result.error),
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al crear el Pokémon',
@@ -92,16 +90,16 @@ export class PokemonController {
   static async delete(req, res) {
     try {
       const { id } = req.params;
-      const result = await PokemonModel.delete({ id });
-      if (result === false)
+      await PokemonModel.delete({ id });
+      res.json({ status: 'success', message: 'Pokémon eliminado' });
+    } catch (error) {
+      if (error.message === 'NOT_FOUND')
         return res.status(404).json({
           status: 'error',
           message: 'Pokémon no encontrado',
         });
-      res.json({ status: 'success', message: 'Pokémon eliminado' });
-    } catch (error) {
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al eliminar el Pokémon',
@@ -112,14 +110,9 @@ export class PokemonController {
 
   // Método para actualizar un Pokémon por su ID
   static async update(req, res) {
-    const result = validatePartialPokemon(req.body);
-    if (!result.success)
-      return res.status(400).json({
-        status: 'error',
-        message: 'Datos de Pokémon inválidos',
-        error: JSON.parse(result.error.message),
-      });
     try {
+      const result = validatePartialPokemon(req.body);
+      if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const { id } = req.params;
       const updatedPokemon = await PokemonModel.update({
         id,
@@ -128,12 +121,22 @@ export class PokemonController {
       res.json({
         status: 'success',
         message: 'Pokémon actualizado con éxito',
-        timestamp: new Date().toLocaleString(),
         data: updatedPokemon,
       });
     } catch (error) {
+      if (error.message === 'INVALID_DATA')
+        return res.status(400).json({
+          status: 'error',
+          message: 'Datos de Pokémon inválidos',
+          error: JSON.parse(error.result.error),
+        });
+      if (error.message === 'NOT_FOUND')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Pokémon no encontrado',
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al actualizar el Pokémon',
@@ -144,14 +147,9 @@ export class PokemonController {
 
   // Método para añadir un juego a un Pokémon
   static async addGame(req, res) {
-    const result = validatePokemonGame(req.body);
-    if (!result.success)
-      return res.status(400).json({
-        status: 'error',
-        message: 'Datos del juego inválidos',
-        error: JSON.parse(result.error.message),
-      });
     try {
+      const result = validatePokemonGame(req.body);
+      if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const { id } = req.params;
       const updatedPokemon = await PokemonModel.addGame({
         id,
@@ -160,24 +158,27 @@ export class PokemonController {
       res.json({
         status: 'success',
         message: 'Juego añadido con éxito',
-        timestamp: new Date().toLocaleString(),
         data: updatedPokemon,
       });
     } catch (error) {
-      if (error.message === 'Pokémon no existe') {
+      if (error.message === 'INVALID_DATA')
         return res.status(400).json({
           status: 'error',
-          message: 'Este Pokémon no existe para esta id',
+          message: 'Datos del juego inválidos',
+          error: JSON.parse(error.result.error),
         });
-      }
-      if (error.message === 'juego ya existe') {
-        return res.status(400).json({
+      if (error.message === 'NOT_FOUND')
+        return res.status(404).json({
           status: 'error',
-          message: 'Este juego ya existe para este Pokémon',
+          message: 'Pokémon no encontrado',
         });
-      }
+      if (error.message === 'GAME_EXISTS')
+        return res.status(409).json({
+          status: 'error',
+          message: 'Juego ya existe',
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al añadir el juego',
@@ -189,30 +190,37 @@ export class PokemonController {
   // Método para eliminar un juego de un Pokémon
   static async deleteGame(req, res) {
     try {
+      const result = validatePartialPokemonGame(req.body);
+      if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const { id } = req.params;
-      const gameName = req.body.pokemonGames;
-      const updatedPokemon = await PokemonModel.deleteGame({ id, gameName });
+      const updatedPokemon = await PokemonModel.deleteGame({
+        id,
+        input: result.data,
+      });
       res.json({
         status: 'success',
-        message: 'Juego eliminado con éxito', // Traducción al español
-        timestamp: new Date().toLocaleString(),
+        message: 'Juego eliminado con éxito',
         data: updatedPokemon,
       });
     } catch (error) {
-      if (error.message === 'Pokémon no existe') {
+      if (error.message === 'INVALID_DATA')
         return res.status(400).json({
           status: 'error',
-          message: 'Este Pokémon no existe para esta id',
+          message: 'Datos del juego inválidos',
+          error: JSON.parse(error.result.error),
         });
-      }
-      if (error.message === 'juego no existe') {
-        return res.status(400).json({
+      if (error.message === 'NOT_FOUND_POKEMON')
+        return res.status(404).json({
           status: 'error',
-          message: 'Este juego no existe para este Pokémon',
+          message: 'Pokémon no encontrado',
         });
-      }
+      if (error.message === 'NOT_FOUND_GAME')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Juego no encontrado',
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al eliminar el juego',
@@ -224,44 +232,37 @@ export class PokemonController {
   // Método para editar un juego de un Pokémon
   static async editGame(req, res) {
     try {
+      const result = validatePartialPokemonGame(req.body);
+      if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const { id } = req.params;
-      const gameName = req.body.pokemonGames;
-      const gameData = req.body;
-      const result = validatePartialPokemonGame(gameData);
-      if (!result.success) {
-        return res.status(400).json({
-          status: 'error',
-          message: 'Datos del juego inválidos',
-          error: JSON.parse(result.error.message),
-        });
-      }
-
       const updatedPokemon = await PokemonModel.editGame({
         id,
-        gameName,
-        gameData: result.data,
+        input: result.data,
       });
       res.json({
         status: 'success',
         message: 'Juego editado con éxito',
-        timestamp: new Date().toLocaleString(),
         data: updatedPokemon,
       });
     } catch (error) {
-      if (error.message === 'Pokémon no existe') {
+      if (error.message === 'INVALID_DATA')
         return res.status(400).json({
           status: 'error',
-          message: 'Este Pokémon no existe para esta id',
+          message: 'Datos del juego inválidos',
+          error: JSON.parse(error.result.error),
         });
-      }
-      if (error.message === 'juego no existe') {
-        return res.status(400).json({
+      if (error.message === 'NOT_FOUND_POKEMON')
+        return res.status(404).json({
           status: 'error',
-          message: 'Este juego no existe para este Pokémon',
+          message: 'Pokémon no encontrado',
         });
-      }
+      if (error.message === 'NOT_FOUND_GAME')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Juego no encontrado',
+        });
       const errorId = randomUUID();
-      console.error(`Error ID: ${errorId}`, error);
+      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al editar el juego',

@@ -12,19 +12,21 @@ POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-      "nameSp": "Muro mágico",
+      "nameSp": "borrar",
       "nameEn": "Magic Guard",
       "description": null
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/654931cb3b25fe649982bd40
+DELETE http://localhost:3000/abilities/656100ea581c57a0f0af570d
 
 ### Actualizar una habilidad
-PATCH http://localhost:3000/abilities/654932a93b25fe649982bd43
+PATCH http://localhost:3000/abilities/654af49b5a40047cf8c99e6cd
 Content-Type: application/json
 
 {
-  "nameEn": "Chlorophyll"
+      "nameSp": "Pies Rápidos",
+      "nameEn": "Quick Feet",
+      "description": "Aumenta su Velocidad si sufre problemas de estado."
 }
 
