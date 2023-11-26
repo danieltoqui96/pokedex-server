@@ -6,7 +6,7 @@ const pokemonSchema = z.object({
   nationalNumber: z.number().int().positive(),
   name: z.string().min(1),
   form: z.string().nullable(),
-  generation: z.string(z.enum(pokemonGenerations)), // Array de generaciones
+  generation: z.enum(pokemonGenerations), // Array de generaciones
   types: z.array(z.enum(pokemonTypes)), // Array de tipos
   stats: z.object({
     hp: z.number().int().positive(),

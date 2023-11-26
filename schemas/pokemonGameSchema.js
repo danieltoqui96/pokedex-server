@@ -8,7 +8,7 @@ const pokedexSchema = z.object({
 });
 
 export const pokemonGameSchema = z.object({
-  pokemonGames: z.string(z.enum(pokemonGames)),
+  pokemonGames: z.enum(pokemonGames),
   pokedex: z.array(pokedexSchema).nullable(),
   abilities: z.array(z.string()),
   hiddenAbility: z.string().nullable(),
