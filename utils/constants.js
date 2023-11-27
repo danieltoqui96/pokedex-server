@@ -1,25 +1,33 @@
 export const pokemonGames = [
-  'Rojo, Verde y Azul',
-  'Rojo y Azul',
-  'Amarillo',
-  'Oro y Plata',
-  'Cristal',
-  'Rubí y Zafiro',
-  'Esmeralda',
-  'Diamante y Perla',
-  'Platino',
-  'Oro HeartGold y Plata SoulSilver',
-  'Negro y Blanco',
-  'Negro 2 y Blanco 2',
-  'X e Y',
-  'Rubí Omega y Zafiro Alfa',
-  'Sol y Luna',
-  'Ultrasol y Ultraluna',
   'Let’s Go, Pikachu! y Let’s Go, Eevee!',
   'Espada y Escudo',
   'Diamante Brillante y Perla Reluciente',
   'Leyendas: Arceus',
   'Escarlata y Púrpura',
+];
+
+export const pokemonGamesEdition = [
+  'Let’s Go, Pikachu! y Let’s Go, Eevee!',
+  'Espada',
+  'Escudo',
+  'Diamante Brillante',
+  'Perla Reluciente',
+  'Leyendas: Arceus',
+  'Escarlata',
+  'Púrpura',
+];
+
+export const pokemonRegions = ['Kanto', 'Galar', 'Sinnoh', 'Hisui', 'Paldea'];
+
+export const pokedexVersions = [
+  'Kanto',
+  'Galar',
+  'La isla de la armadura',
+  'Las nieves de la corona',
+  'Sinnoh',
+  'Hisui',
+  'Paldea',
+  'Noroteo',
 ];
 
 export const pokemonTypes = [

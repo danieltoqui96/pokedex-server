@@ -9,60 +9,70 @@ POST http://localhost:3000/pokemon
 Content-Type: application/json
 
 {
-  "nationalNumber": 65,
-  "name": "Alakazam",
+  "nationalNumber": 909,
+  "name": "Fuecoco",
   "form": null,
-  "generation": "i",
-  "types": ["psíquico"],
+  "generation": "ix",
+  "types": ["fuego"],
   "stats": {
-    "hp": 55,
-    "attack": 50,
-    "defense": 45,
-    "specialAttack": 135,
-    "specialDefense": 95,
-    "speed": 120
+    "hp": 67,
+    "attack": 45,
+    "defense": 59,
+    "specialAttack": 63,
+    "specialDefense": 40,
+    "speed": 36
   },
-  "sprite": "https://images.wikidexcdn.net/mwuploads/wikidex/f/f5/Alakazam.png",
-  "games": []
+  "sprites": {
+    "base": "https://img.pokemondb.net/sprites/scarlet-violet/normal/fuecoco.png",
+    "home": {
+      "normal":"https://img.pokemondb.net/sprites/home/normal/fuecoco.png" ,
+      "shiny": "https://img.pokemondb.net/sprites/home/shiny/fuecoco.png" 
+    }
+  },
+  "games": [
+    {
+      "pokemonGames": "Escarlata y Púrpura",
+      "pokedex": [{
+        "region": "Paldea",
+        "versions": [{
+          "version": "Paldea",
+          "number": 4
+        }],
+        "gameEntries": [{
+          "game": "Escarlata",
+          "entryText": "Yace sobre rocas calientes, cuyo calor transforma en energía ígnea tras absorberlo por sus escamas rectangulares."
+        }]
+      }],
+      "abilities": ["6564d34b8a1a0258389d4756"],
+      "hiddenAbility": "6564d3c88a1a0258389d4757",
+      "moves": []
+    }
+  ]
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/6562aa61acbcdc1e913f9b00
+DELETE http://localhost:3000/pokemon/6564ee9e055fb52b5a501c02
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/6560ff14a983f8f9fdee4bfe
+PATCH http://localhost:3000/pokemon/6564f421c2d109c825ed4b27
 Content-Type: application/json
 
 {
-  "games": []
-}
-
-
-### Agregar un juego de Pokemon
-PATCH http://localhost:3000/pokemon/game/6562aac44920d757b27bee99/add
-Content-Type: application/json
-
-{
+  "games": [{
   "pokemonGames": "Escarlata y Púrpura",
-  "pokedex": null,
-  "abilities": ["6561057cd36e20840955f51c", "656100ea581c57a0f0af570d"],
-  "hiddenAbility": "656105b7d36e20840955f51d",
-  "moves": null
-}
-
-### Eliminar un juego de Pokemon
-DELETE  http://localhost:3000/pokemon/game/6562aac44920d757b27bee99/delete
-Content-Type: application/json
-
-{
-  "pokemonGames": "Escarlata y Púrpura"
-}
-
-### Editar un juego de Pokemon
-PATCH   http://localhost:3000/pokemon/game/6562aac44920d757b27bee99/edit
-Content-Type: application/json
-
-{
-  "pokemonGames": "Escarlata y Púrpura",
-  "hiddenAbility": "5"
+  "pokedex": [{
+    "region": "Paldea",
+    "versions": [{
+      "version": "Paldea",
+      "number": 4
+    }],
+    "gameEntries": [{
+      "game": "Escarlata",
+      "entryText": "Yace sobre rocas calientes, cuyo calor transforma en energía ígnea tras absorberlo por sus escamas rectangulares."
+    }]
+  }],
+  "abilities": ["6564d34b8a1a0258389d4756"],
+  "hiddenAbility": "6564d3c88a1a0258389d4757",
+  "moves": []
+}]
 }

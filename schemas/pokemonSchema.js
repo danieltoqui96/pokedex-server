@@ -1,6 +1,12 @@
 import z from 'zod';
-import { pokemonGenerations, pokemonTypes } from '../utils/constants.js';
-import { pokemonGameSchema } from './pokemonGameSchema.js';
+import {
+  pokemonGenerations,
+  pokemonTypes,
+  pokemonGames,
+  pokemonRegions,
+  pokedexVersions,
+  pokemonGamesEdition,
+} from '../utils/constants.js';
 
 const pokemonSchema = z.object({
   nationalNumber: z.number().int().positive(),
@@ -16,8 +22,38 @@ const pokemonSchema = z.object({
     specialDefense: z.number().int().positive(),
     speed: z.number().int().positive(),
   }), // Objeto de estadísticas
-  sprite: z.string().url().nullable(),
-  games: z.array(pokemonGameSchema), // Array de datos de la región
+  sprites: z.object({
+    base: z.string().url().nullable(),
+    home: z.object({
+      normal: z.string().url().nullable(),
+      shiny: z.string().url().nullable(),
+    }),
+  }),
+  games: z.array(
+    z.object({
+      pokemonGames: z.enum(pokemonGames),
+      pokedex: z.array(
+        z.object({
+          region: z.enum(pokemonRegions),
+          versions: z.array(
+            z.object({
+              version: z.enum(pokedexVersions),
+              number: z.number().int().positive(),
+            })
+          ),
+          gameEntries: z.array(
+            z.object({
+              game: z.enum(pokemonGamesEdition),
+              entryText: z.string(),
+            })
+          ),
+        })
+      ),
+      abilities: z.array(z.string()),
+      hiddenAbility: z.string().nullable(),
+      moves: z.array(z.string()),
+    })
+  ), // Array de datos de la región
 });
 
 export function validatePokemon(input) {

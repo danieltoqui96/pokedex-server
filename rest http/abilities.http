@@ -12,21 +12,21 @@ POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-      "nameSp": "borrar",
-      "nameEn": "Magic Guard",
-      "description": null
+      "nameSp": "Ignorante",
+      "nameEn": "Unaware",
+      "description": "Pasa por alto los cambios en las características de un Pokémon al atacarlo o recibir daño."
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/656100ea581c57a0f0af570d
+DELETE http://localhost:3000/abilities/654af50f5a40047cf7c99e70
 
 ### Actualizar una habilidad
 PATCH http://localhost:3000/abilities/654af49b5a40047cf8c99e6cd
 Content-Type: application/json
 
 {
-      "nameSp": "Pies Rápidos",
-      "nameEn": "Quick Feet",
-      "description": "Aumenta su Velocidad si sufre problemas de estado."
+      "nameSp": "Mar llamas",
+      "nameEn": "Blaze",
+      "description": "Potencia sus movimientos de tipo fuego cuando le quedan pocos PS."
 }
 
