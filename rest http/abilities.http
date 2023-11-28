@@ -12,21 +12,19 @@ POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-      "nameSp": "Ignorante",
-      "nameEn": "Unaware",
-      "description": "Pasa por alto los cambios en las características de un Pokémon al atacarlo o recibir daño."
+      "nameSp": "Robustez",
+      "nameEn": "Sturdy",
+      "description": "El Pokémon no puede debilitarse de un solo golpe cuando tiene los PS al máximo. También evita los movimientos fulminantes."
 }
 
 ### Borrar una habilidad
 DELETE http://localhost:3000/abilities/654af50f5a40047cf7c99e70
 
 ### Actualizar una habilidad
-PATCH http://localhost:3000/abilities/654af49b5a40047cf8c99e6cd
+PATCH http://localhost:3000/abilities/6564d34b8a1a0258389d4756
 Content-Type: application/json
 
 {
-      "nameSp": "Mar llamas",
-      "nameEn": "Blaze",
-      "description": "Potencia sus movimientos de tipo fuego cuando le quedan pocos PS."
+      "nameSp": "Mar llamas"
 }
 

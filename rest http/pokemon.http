@@ -2,31 +2,31 @@
 GET http://localhost:3000/pokemon?nombre=&&tipo=
 
 ### Recuperar un Pokémon por id
-GET http://localhost:3000/pokemon/6561054ca233564e6482cc37
+GET http://localhost:3000/pokemon/656525b8c8b8fffd9c697b60
 
 ### Crear un Pokémon
 POST http://localhost:3000/pokemon
 Content-Type: application/json
 
 {
-  "nationalNumber": 909,
-  "name": "Fuecoco",
+  "nationalNumber": 910,
+  "name": "Skeledirge",
   "form": null,
   "generation": "ix",
-  "types": ["fuego"],
+  "types": ["fuego", "fantasma"],
   "stats": {
-    "hp": 67,
-    "attack": 45,
-    "defense": 59,
-    "specialAttack": 63,
-    "specialDefense": 40,
-    "speed": 36
+    "hp": 104,
+    "attack": 75,
+    "defense": 100,
+    "specialAttack": 110,
+    "specialDefense": 75,
+    "speed": 66
   },
   "sprites": {
-    "base": "https://img.pokemondb.net/sprites/scarlet-violet/normal/fuecoco.png",
+    "base": "https://img.pokemondb.net/sprites/scarlet-violet/normal/skeledirge.png",
     "home": {
-      "normal":"https://img.pokemondb.net/sprites/home/normal/fuecoco.png" ,
-      "shiny": "https://img.pokemondb.net/sprites/home/shiny/fuecoco.png" 
+      "normal": "https://img.pokemondb.net/sprites/home/normal/skeledirge.png",
+      "shiny": "https://img.pokemondb.net/sprites/home/shiny/skeledirge.png"
     }
   },
   "games": [
@@ -34,14 +34,10 @@ Content-Type: application/json
       "pokemonGames": "Escarlata y Púrpura",
       "pokedex": [{
         "region": "Paldea",
-        "versions": [{
-          "version": "Paldea",
-          "number": 4
-        }],
-        "gameEntries": [{
-          "game": "Escarlata",
-          "entryText": "Yace sobre rocas calientes, cuyo calor transforma en energía ígnea tras absorberlo por sus escamas rectangulares."
-        }]
+        "versions": [{ "version": "Paldea", "number": 6 }],
+        "gameEntries": [
+          { "game": "Escarlata", "entryText": "Se dice que el pájaro flamígero al que da forma su canto es un espíritu que moraba en la bola de fuego que le coronaba la cabeza."},
+          { "game": "Púrpura", "entryText": "Su dulce canto calma el espíritu de quien lo oye. Achicharra a sus enemigos con llamas que llegan a alcanzar los 3000 ºC."}]
       }],
       "abilities": ["6564d34b8a1a0258389d4756"],
       "hiddenAbility": "6564d3c88a1a0258389d4757",
@@ -51,28 +47,40 @@ Content-Type: application/json
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/6564ee9e055fb52b5a501c02
+DELETE http://localhost:3000/pokemon/656525b8c8b8fffd9c697b60
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/6564f421c2d109c825ed4b27
+PATCH http://localhost:3000/pokemon/6565252ac8b8fffd9c697b5f
 Content-Type: application/json
 
 {
-  "games": [{
-  "pokemonGames": "Escarlata y Púrpura",
-  "pokedex": [{
-    "region": "Paldea",
-    "versions": [{
-      "version": "Paldea",
-      "number": 4
-    }],
-    "gameEntries": [{
-      "game": "Escarlata",
-      "entryText": "Yace sobre rocas calientes, cuyo calor transforma en energía ígnea tras absorberlo por sus escamas rectangulares."
-    }]
-  }],
-  "abilities": ["6564d34b8a1a0258389d4756"],
-  "hiddenAbility": "6564d3c88a1a0258389d4757",
-  "moves": []
-}]
+  "games": [
+      {
+        "pokemonGames": "Escarlata y Púrpura",
+        "pokedex": [
+          {
+            "region": "Paldea",
+            "versions": [
+              {
+                "version": "Paldea",
+                "number": 5
+              }
+            ],
+            "gameEntries": [
+              {
+                "game": "Escarlata",
+                "entryText": "La mezcla de energía ígnea con el exceso de su propia fuerza vital ha tomado la forma de una bola de fuego de aspecto oval sobre su cabeza."
+              },
+              {
+                "game": "Púrpura",
+                "entryText": "Sus cuerdas vocales y la válvula de su saca de fuego están estrechamente relacionadas. Emite sonidos guturales al expeler llamas."
+              }
+            ]
+          }
+        ],
+        "abilities": ["6564d34b8a1a0258389d4756"],
+        "hiddenAbility": "6564d3c88a1a0258389d4757",
+        "moves": []
+      }
+    ]
 }

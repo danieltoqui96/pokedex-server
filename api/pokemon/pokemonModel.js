@@ -11,17 +11,17 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   },
 });
 
-// Función para conectar a la base de datos y obtener la colección 'pokemon'
-async function connect() {
+// Función para conectar a la base de datos y obtener la colección
+async function connect(collection) {
   await client.connect();
-  return client.db('pokemondb').collection('pokemon');
+  return client.db('pokemondb').collection(collection);
 }
 
 // Definimos la clase PokemonModel
 export class PokemonModel {
   // Método para obtener todos los Pokémon
   static async getAll({ tipo, nombre }) {
-    const db = await connect();
+    const db = await connect('pokemon');
     let query = {};
     if (tipo) query.types = { $regex: new RegExp(`${tipo}`, 'i') };
     if (nombre) query.name = { $regex: new RegExp(`${nombre}`, 'i') };
@@ -30,7 +30,7 @@ export class PokemonModel {
 
   // Método para obtener un Pokémon por su ID
   static async getById({ id }) {
-    const db = await connect();
+    const db = await connect('pokemon');
     const pokemon = await db.findOne({ _id: new ObjectId(id) });
     if (!pokemon) throw new Error('NOT_FOUND');
     return pokemon;
@@ -38,24 +38,76 @@ export class PokemonModel {
 
   // Método para crear un nuevo Pokémon
   static async create({ input }) {
-    const db = await connect();
+    // Conectarse a la colección de habilidades
+    const abilitiesDb = await connect('abilities');
+    for (let game of input.games) {
+      // Busca habilidades
+      game.abilities = await Promise.all(
+        game.abilities.map(async (id) => {
+          const ability = await abilitiesDb.findOne(
+            { _id: new ObjectId(id) },
+            { projection: { lastModified: 0 } }
+          );
+          if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
+          return ability; // Habilidad con datos
+        }) // Genera array de habilidades
+      ); // Reemplaza por array de habilidades
+
+      // Busca habilidad oculta
+      game.hiddenAbility = await abilitiesDb.findOne(
+        { _id: new ObjectId(game.hiddenAbility) },
+        { projection: { lastModified: 0 } }
+      );
+      if (!game.hiddenAbility)
+        throw { message: 'NOT_FOUND_ABILITY', id: game.hiddenAbility };
+    }
+
+    // Conectarse a la colección de Pokémon
+    const pokemonDb = await connect('pokemon');
     input.lastModified = new Date().toLocaleString();
-    const { insertedId } = await db.insertOne(input);
+    const { insertedId } = await pokemonDb.insertOne(input);
     return { _id: insertedId, ...input };
   }
 
   // Método para eliminar un Pokémon por su ID
   static async delete({ id }) {
-    const db = await connect();
+    const db = await connect('pokemon');
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
     if (deletedCount === 0) throw new Error('NOT_FOUND');
   }
 
   // Método para actualizar un Pokémon por su ID
   static async update({ id, input }) {
-    const db = await connect();
+    // Conectarse a la colección de habilidades
+    const abilitiesDb = await connect('abilities');
+    if (input.games) {
+      for (let game of input.games) {
+        // Busca habilidades
+        game.abilities = await Promise.all(
+          game.abilities.map(async (id) => {
+            const ability = await abilitiesDb.findOne(
+              { _id: new ObjectId(id) },
+              { projection: { lastModified: 0 } }
+            );
+            if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
+            return ability; // Habilidad con datos
+          }) // Genera array de habilidades
+        ); // Reemplaza por array de habilidades
+
+        // Busca habilidad oculta
+        game.hiddenAbility = await abilitiesDb.findOne(
+          { _id: new ObjectId(game.hiddenAbility) },
+          { projection: { lastModified: 0 } }
+        );
+        if (!game.hiddenAbility)
+          throw { message: 'NOT_FOUND_ABILITY', id: game.hiddenAbility };
+      }
+    }
+
+    // Conectarse a la colección de Pokémon
+    const pokemonDb = await connect('pokemon');
     input.lastModified = new Date().toLocaleString();
-    const updatedPokemon = await db.findOneAndUpdate(
+    const updatedPokemon = await pokemonDb.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
       { returnDocument: 'after' }

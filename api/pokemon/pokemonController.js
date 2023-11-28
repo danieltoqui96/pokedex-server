@@ -72,6 +72,12 @@ export class PokemonController {
           message: 'Datos de Pokémon inválidos',
           error: JSON.parse(error.result.error),
         });
+      if (error.message === 'NOT_FOUND_ABILITY')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Habilidad no encontrada',
+          id: error.id,
+        });
       const errorId = randomUUID();
       console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({
@@ -125,6 +131,12 @@ export class PokemonController {
           status: 'error',
           message: 'Datos de Pokémon inválidos',
           error: JSON.parse(error.result.error),
+        });
+      if (error.message === 'NOT_FOUND_ABILITY')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Habilidad no encontrada',
+          id: error.id,
         });
       if (error.message === 'NOT_FOUND')
         return res.status(404).json({
