@@ -94,6 +94,12 @@ export class AbilitiesController {
           status: 'error',
           message: 'Habilidad no encontrada',
         });
+      if (error.message === 'ABILITY_IN_USE')
+        return res.status(409).json({
+          status: 'error',
+          message: 'Habilidad en uso',
+          error: `Habilidad presente en: ${error.pokemon.join(', ')}`,
+        });
       const errorId = randomUUID();
       console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
       res.status(500).json({

@@ -2,7 +2,7 @@
 GET http://localhost:3000/abilities
 
 ### Recuperar una habilidad por id
-GET http://localhost:3000/abilities/6548211649402378633eecea
+GET http://localhost:3000/abilities/65651aeec8b8fffd9c697b58
 
 ### Recuperar todas las habilidades por nombre
 GET http://localhost:3000/abilities?nombre=i
@@ -12,19 +12,19 @@ POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-      "nameSp": "Robustez",
-      "nameEn": "Sturdy",
-      "description": "El Pokémon no puede debilitarse de un solo golpe cuando tiene los PS al máximo. También evita los movimientos fulminantes."
+      "nameSp": "aguante",
+      "nameEn": "aguante",
+      "description": "Pone nervioso al rival y le impide usar bayas."
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/654af50f5a40047cf7c99e70
+DELETE http://localhost:3000/abilities/6567e772aea15d551bc9aac6
 
 ### Actualizar una habilidad
-PATCH http://localhost:3000/abilities/6564d34b8a1a0258389d4756
+PATCH http://localhost:3000/abilities/6564d3c88a1a0258389d4757
 Content-Type: application/json
 
 {
-      "nameSp": "Mar llamas"
+      "nameSp": "Ignorante"
 }
 

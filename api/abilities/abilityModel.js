@@ -49,6 +49,25 @@ export class AbilityModel {
 
   // Método para eliminar una habilidad por su ID
   static async delete({ id }) {
+    // Conectarse a la colección de Pokémon
+    const pokemonDb = await connect('pokemon');
+
+    // Encontrar todos los Pokémon que tienen la habilidad que se está eliminando
+    const allPokemon = await pokemonDb
+      .find({
+        $or: [
+          { 'games.abilities._id': new ObjectId(id) },
+          { 'games.hiddenAbility._id': new ObjectId(id) },
+        ],
+      })
+      .toArray();
+
+    if (allPokemon.length > 0)
+      throw {
+        message: 'ABILITY_IN_USE',
+        pokemon: allPokemon.map((pokemon) => pokemon.name),
+      };
+
     const db = await connect('abilities');
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
     if (deletedCount === 0) throw new Error('NOT_FOUND');
@@ -78,6 +97,7 @@ export class AbilityModel {
       })
       .toArray();
 
+    delete updatedAbility.lastModified;
     // Para cada Pokémon, actualizar los datos de la habilidad
     const bulkWriteOperations = await Promise.all(
       allPokemon.map(async (pokemon) => {
