@@ -25,7 +25,7 @@ export class PokemonModel {
     let query = {};
     if (tipo) query.types = { $regex: new RegExp(`${tipo}`, 'i') };
     if (nombre) query.name = { $regex: new RegExp(`${nombre}`, 'i') };
-    return db.find(query).sort({ number: 1 }).toArray();
+    return db.find(query).sort({ nationalNumber: 1 }).toArray();
   }
 
   // Método para obtener un Pokémon por su ID
@@ -40,26 +40,26 @@ export class PokemonModel {
   static async create({ input }) {
     // Conectarse a la colección de habilidades
     const abilitiesDb = await connect('abilities');
-    for (let game of input.games) {
+    for (let game of input.gameData) {
       // Busca habilidades
-      game.abilities = await Promise.all(
-        game.abilities.map(async (id) => {
+      game.abilities.normal = await Promise.all(
+        game.abilities.normal.map(async (id) => {
           const ability = await abilitiesDb.findOne(
             { _id: new ObjectId(id) },
             { projection: { lastModified: 0 } }
           );
           if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
-          return ability; // Habilidad con datos
+          return ability; // Retorna habilidad con datos
         }) // Genera array de habilidades
       ); // Reemplaza por array de habilidades
 
       // Busca habilidad oculta
-      game.hiddenAbility = await abilitiesDb.findOne(
-        { _id: new ObjectId(game.hiddenAbility) },
+      game.abilities.hidden = await abilitiesDb.findOne(
+        { _id: new ObjectId(game.abilities.hidden) },
         { projection: { lastModified: 0 } }
       );
-      if (!game.hiddenAbility)
-        throw { message: 'NOT_FOUND_ABILITY', id: game.hiddenAbility };
+      if (!game.abilities.hidden)
+        throw { message: 'NOT_FOUND_ABILITY', id: game.abilities.hidden };
     }
 
     // Conectarse a la colección de Pokémon
@@ -80,11 +80,11 @@ export class PokemonModel {
   static async update({ id, input }) {
     // Conectarse a la colección de habilidades
     const abilitiesDb = await connect('abilities');
-    if (input.games) {
-      for (let game of input.games) {
+    if (input.gameData) {
+      for (let game of input.gameData) {
         // Busca habilidades
-        game.abilities = await Promise.all(
-          game.abilities.map(async (id) => {
+        game.abilities.normal = await Promise.all(
+          game.abilities.normal.map(async (id) => {
             const ability = await abilitiesDb.findOne(
               { _id: new ObjectId(id) },
               { projection: { lastModified: 0 } }
@@ -95,12 +95,12 @@ export class PokemonModel {
         ); // Reemplaza por array de habilidades
 
         // Busca habilidad oculta
-        game.hiddenAbility = await abilitiesDb.findOne(
-          { _id: new ObjectId(game.hiddenAbility) },
+        game.abilities.hidden = await abilitiesDb.findOne(
+          { _id: new ObjectId(game.abilities.hidden) },
           { projection: { lastModified: 0 } }
         );
-        if (!game.hiddenAbility)
-          throw { message: 'NOT_FOUND_ABILITY', id: game.hiddenAbility };
+        if (!game.abilities.hidden)
+          throw { message: 'NOT_FOUND_ABILITY', id: game.abilities.hidden };
       }
     }
 

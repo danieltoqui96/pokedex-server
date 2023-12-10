@@ -1,5 +1,5 @@
 ### Recuperar todos los Pokémon
-GET http://localhost:3000/pokemon?nombre=&&tipo=fuego
+GET http://localhost:3000/pokemon?nombre=h&&tipo=
 
 ### Recuperar un Pokémon por id
 GET http://localhost:3000/pokemon/656525b8c8b8fffd9c697b60
@@ -13,7 +13,10 @@ Content-Type: application/json
   "name": "Houndoom",
   "form": null,
   "generation": "ii",
-  "types": ["siniestro", "fuego"],
+  "types": [
+    "siniestro",
+    "fuego"
+  ],
   "stats": {
     "hp": 75,
     "attack": 90,
@@ -29,60 +32,51 @@ Content-Type: application/json
       "shiny": "https://img.pokemondb.net/sprites/home/shiny/houndoom.png"
     }
   },
-  "games": [
-    {
-      "pokemonGames": "Escarlata y Púrpura",
-      "pokedex": [{
-        "region": "Paldea",
-        "versions": [
-          { "version": "Paldea", "number": 26 },
-          { "version": "Noroteo", "number": 124 }],
-        "gameEntries": [
-          { "game": "Escarlata", "entryText": "Si alguien se quema con las llamas que lanza por la boca, el dolor no desaparecerá nunca."},
-          { "game": "Púrpura", "entryText": "Al oír sus siniestros aullidos, los otros Pokémon se estremecen y huyen a sus nidos."}]
-      }],
-      "abilities": ["6567dad5a218aa1a2529ceee", "6567db01a218aa1a2529ceef"],
-      "hiddenAbility": "6567db23a218aa1a2529cef0",
-      "moves": []
-    }
+  "gameData": [
   ]
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/656525b8c8b8fffd9c697b60
+DELETE http://localhost:3000/pokemon/657538ca9903e7e1e15417f6
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/6565252ac8b8fffd9c697b5f
+PATCH http://localhost:3000/pokemon/65753e56049522a003224d5a
 Content-Type: application/json
 
 {
-  "games": [
-      {
-        "pokemonGames": "Escarlata y Púrpura",
-        "pokedex": [
-          {
-            "region": "Paldea",
-            "versions": [
-              {
-                "version": "Paldea",
-                "number": 5
-              }
-            ],
-            "gameEntries": [
-              {
-                "game": "Escarlata",
-                "entryText": "La mezcla de energía ígnea con el exceso de su propia fuerza vital ha tomado la forma de una bola de fuego de aspecto oval sobre su cabeza."
-              },
-              {
-                "game": "Púrpura",
-                "entryText": "Sus cuerdas vocales y la válvula de su saca de fuego están estrechamente relacionadas. Emite sonidos guturales al expeler llamas."
-              }
-            ]
-          }
-        ],
-        "abilities": ["6564d34b8a1a0258389d4756"],
-        "hiddenAbility": "6564d3c88a1a0258389d4757",
-        "moves": []
-      }
-    ]
+  "gameData": [
+    {
+      "games": "Escarlata y Púrpura",
+      "region": "Paldea",
+      "pokedex": [
+        {
+          "versions": [
+            {
+            "name": "Paldea",
+            "number": 26
+            },
+            {
+              "name": "Noroteo",
+              "number": 124
+            }
+          ],
+          "entries": [
+            {
+              "game": "Escarlata",
+              "info": "Si alguien se quema con las llamas que lanza por la boca, el dolor no desaparecerá nunca."
+            },
+            {
+              "game": "Púrpura",
+              "info": "Al oír sus siniestros aullidos, los otros Pokémon se estremecen y huyen a sus nidos."
+            }
+          ]
+        }
+      ],
+      "abilities": {
+        "normal": ["65753b7ba19b8937c4895f91", "65753bbea19b8937c4895f92"],
+        "hidden": "65753bf1a19b8937c4895f93"
+      },
+      "moves": []
+    }
+  ]
 }

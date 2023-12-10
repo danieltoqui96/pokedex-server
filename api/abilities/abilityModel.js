@@ -25,10 +25,10 @@ export class AbilityModel {
     let query = {};
     if (nombre)
       query.$or = [
-        { nameSp: { $regex: new RegExp(`${nombre}`, 'i') } },
-        { nameEn: { $regex: new RegExp(`${nombre}`, 'i') } },
+        { 'name.spanish': { $regex: new RegExp(`${nombre}`, 'i') } },
+        { 'name.english': { $regex: new RegExp(`${nombre}`, 'i') } },
       ];
-    return db.find(query).sort({ nameSp: 1 }).toArray();
+    return db.find(query).sort({ 'name.spanish': 1 }).toArray();
   }
 
   // Método para obtener una habilidad por su ID
@@ -56,8 +56,8 @@ export class AbilityModel {
     const allPokemon = await pokemonDb
       .find({
         $or: [
-          { 'games.abilities._id': new ObjectId(id) },
-          { 'games.hiddenAbility._id': new ObjectId(id) },
+          { 'gameData.abilities.normal._id': new ObjectId(id) },
+          { 'gameData.abilities.hidden._id': new ObjectId(id) },
         ],
       })
       .toArray();
@@ -68,6 +68,7 @@ export class AbilityModel {
         pokemon: allPokemon.map((pokemon) => pokemon.name),
       };
 
+    // Conectarse a la colección de habilidades
     const db = await connect('abilities');
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
     if (deletedCount === 0) throw new Error('NOT_FOUND');
@@ -75,14 +76,20 @@ export class AbilityModel {
 
   // Método para actualizar una habilidad por su ID
   static async update({ id, input }) {
+    // Conectarse a la colección de habilidades
     const abilitiesDb = await connect('abilities');
     input.lastModified = new Date().toLocaleString();
+
+    // Actualizar la habilidad en la base de datos de habilidades
     const updatedAbility = await abilitiesDb.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
       { returnDocument: 'after' }
     );
+
     if (!updatedAbility) throw new Error('NOT_FOUND');
+
+    delete updatedAbility.lastModified;
 
     // Conectarse a la colección de Pokémon
     const pokemonDb = await connect('pokemon');
@@ -91,35 +98,49 @@ export class AbilityModel {
     const allPokemon = await pokemonDb
       .find({
         $or: [
-          { 'games.abilities._id': new ObjectId(id) },
-          { 'games.hiddenAbility._id': new ObjectId(id) },
+          { 'gameData.abilities.normal._id': new ObjectId(id) },
+          { 'gameData.abilities.hidden._id': new ObjectId(id) },
         ],
       })
       .toArray();
 
-    delete updatedAbility.lastModified;
     // Para cada Pokémon, actualizar los datos de la habilidad
     const bulkWriteOperations = await Promise.all(
       allPokemon.map(async (pokemon) => {
-        for (let game of pokemon.games) {
-          game.abilities = game.abilities.map((ability) =>
+        // Para cada juego en los datos del juego del Pokémon
+        for (let game of pokemon.gameData) {
+          // Actualizar las habilidades normales
+          game.abilities.normal = game.abilities.normal.map((ability) =>
             ability._id.toString() === id ? updatedAbility : ability
           );
-          if (game.hiddenAbility && game.hiddenAbility._id.toString() === id)
-            game.hiddenAbility = updatedAbility;
+
+          // Actualizar la habilidad oculta si coincide con la habilidad que se está actualizando
+          if (
+            game.abilities.hidden &&
+            game.abilities.hidden._id.toString() === id
+          )
+            game.abilities.hidden = updatedAbility;
         }
+
+        // Devolver una operación de actualización para este Pokémon
         return {
           updateOne: {
             filter: { _id: pokemon._id },
-            update: { $set: { games: pokemon.games } },
+            update: { $set: { gameData: pokemon.gameData } },
           },
         };
       })
     );
 
-    await pokemonDb.bulkWrite(bulkWriteOperations);
+    // Si hay operaciones de actualización, realizar una operación de escritura masiva
+    if (bulkWriteOperations.length > 0) {
+      await pokemonDb.bulkWrite(bulkWriteOperations);
+    }
 
+    // Añadir los nombres de los Pokémon actualizados a la habilidad actualizada
     updatedAbility.updatedPokemon = allPokemon.map((pokemon) => pokemon.name);
+
+    // Devolver la habilidad actualizada
     return updatedAbility;
   }
 }

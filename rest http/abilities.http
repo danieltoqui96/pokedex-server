@@ -12,19 +12,25 @@ POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-      "nameSp": "aguante",
-      "nameEn": "aguante",
-      "description": "Pone nervioso al rival y le impide usar bayas."
+  "name":{
+    "spanish": "Nerviosismo",
+    "english": "Unnerve"
+  },
+  "description": "Pone nervioso al rival y le impide usar bayas."
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/6567e772aea15d551bc9aac6
+DELETE http://localhost:3000/abilities/65651aeec8b8fffd9c697b58
 
 ### Actualizar una habilidad
-PATCH http://localhost:3000/abilities/6564d3c88a1a0258389d4757
+PATCH http://localhost:3000/abilities/65753bbea19b8937c4895f92
 Content-Type: application/json
 
 {
-      "nameSp": "Ignorante"
+  "name": {
+    "spanish": "Madrugar",
+    "english": "Early Bird"
+  }
 }
+
 

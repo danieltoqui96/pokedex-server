@@ -1,19 +1,19 @@
 import z from 'zod';
 import {
-  pokemonGenerations,
-  pokemonTypes,
-  pokemonGames,
-  pokemonRegions,
-  pokedexVersions,
-  pokemonGamesEdition,
+  generations,
+  types,
+  games,
+  regions,
+  pokedex,
+  gameEditions,
 } from '../utils/constants.js';
 
 const pokemonSchema = z.object({
   nationalNumber: z.number().int().positive(),
   name: z.string().min(1),
   form: z.string().nullable(),
-  generation: z.enum(pokemonGenerations), // Array de generaciones
-  types: z.array(z.enum(pokemonTypes)), // Array de tipos
+  generation: z.enum(generations), // Generación del Pokemon
+  types: z.array(z.enum(types)), // Tipos del Pokemon
   stats: z.object({
     hp: z.number().int().positive(),
     attack: z.number().int().positive(),
@@ -21,7 +21,7 @@ const pokemonSchema = z.object({
     specialAttack: z.number().int().positive(),
     specialDefense: z.number().int().positive(),
     speed: z.number().int().positive(),
-  }), // Objeto de estadísticas
+  }),
   sprites: z.object({
     base: z.string().url().nullable(),
     home: z.object({
@@ -29,31 +29,35 @@ const pokemonSchema = z.object({
       shiny: z.string().url().nullable(),
     }),
   }),
-  games: z.array(
+  gameData: z.array(
     z.object({
-      pokemonGames: z.enum(pokemonGames),
-      pokedex: z.array(
-        z.object({
-          region: z.enum(pokemonRegions),
-          versions: z.array(
-            z.object({
-              version: z.enum(pokedexVersions),
-              number: z.number().int().positive(),
-            })
-          ),
-          gameEntries: z.array(
-            z.object({
-              game: z.enum(pokemonGamesEdition),
-              entryText: z.string(),
-            })
-          ),
-        })
-      ),
-      abilities: z.array(z.string()),
-      hiddenAbility: z.string().nullable(),
+      games: z.enum(games), // Escarlata y Púrpura,
+      region: z.enum(regions), // Paldea
+      pokedex: z
+        .array(
+          z.object({
+            versions: z.array(
+              z.object({
+                name: z.enum(pokedex), // Paldea/Noroteo
+                number: z.number().int().positive(),
+              })
+            ),
+            entries: z.array(
+              z.object({
+                game: z.enum(gameEditions), // Escarlata/Púrpura
+                info: z.string(),
+              })
+            ),
+          })
+        )
+        .nullable(),
+      abilities: z.object({
+        normal: z.array(z.string()),
+        hidden: z.string().nullable(),
+      }),
       moves: z.array(z.string()),
     })
-  ), // Array de datos de la región
+  ), // Array de datos del juego
 });
 
 export function validatePokemon(input) {

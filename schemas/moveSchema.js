@@ -1,12 +1,12 @@
 import z, { string } from 'zod';
-import { pokemonTypes } from '../utils/constants.js';
+import { types } from '../utils/constants.js';
 
 const classes = ['físico', 'especial', 'estado'];
 
 const moveSchema = z.object({
   nameSp: z.string().min(1),
   nameEn: z.string().min(1),
-  type: z.enum(pokemonTypes),
+  type: z.enum(types),
   class: z.enum(classes),
   power: z.number().int().positive().nullable(),
   accuracy: z.number().int().positive(),

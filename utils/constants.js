@@ -1,36 +1,18 @@
-export const pokemonGames = [
-  'Let’s Go, Pikachu! y Let’s Go, Eevee!',
-  'Espada y Escudo',
-  'Diamante Brillante y Perla Reluciente',
-  'Leyendas: Arceus',
-  'Escarlata y Púrpura',
+// Lista de las generaciones de los juegos de Pokémon
+export const generations = [
+  'i',
+  'ii',
+  'iii',
+  'iv',
+  'v',
+  'vi',
+  'vii',
+  'viii',
+  'ix',
 ];
 
-export const pokemonGamesEdition = [
-  'Let’s Go, Pikachu! y Let’s Go, Eevee!',
-  'Espada',
-  'Escudo',
-  'Diamante Brillante',
-  'Perla Reluciente',
-  'Leyendas: Arceus',
-  'Escarlata',
-  'Púrpura',
-];
-
-export const pokemonRegions = ['Kanto', 'Galar', 'Sinnoh', 'Hisui', 'Paldea'];
-
-export const pokedexVersions = [
-  'Kanto',
-  'Galar',
-  'La isla de la armadura',
-  'Las nieves de la corona',
-  'Sinnoh',
-  'Hisui',
-  'Paldea',
-  'Noroteo',
-];
-
-export const pokemonTypes = [
+// Lista de los tipos de Pokémon
+export const types = [
   'normal',
   'fuego',
   'agua',
@@ -51,14 +33,37 @@ export const pokemonTypes = [
   'hada',
 ];
 
-export const pokemonGenerations = [
-  'i',
-  'ii',
-  'iii',
-  'iv',
-  'v',
-  'vi',
-  'vii',
-  'viii',
-  'ix',
+// Lista de los nombres de los juegos de Pokémon
+export const games = [
+  'Let’s Go, Pikachu! y Let’s Go, Eevee!',
+  'Espada y Escudo',
+  'Diamante Brillante y Perla Reluciente',
+  'Leyendas: Arceus',
+  'Escarlata y Púrpura',
+];
+// Lista de las regiones en los juegos de Pokémon
+export const regions = ['Kanto', 'Galar', 'Sinnoh', 'Hisui', 'Paldea'];
+
+// Lista de los nombres de las Pokedex en los juegos de Pokémon
+export const pokedex = [
+  'Kanto',
+  'Galar',
+  'La isla de la armadura',
+  'Las nieves de la corona',
+  'Sinnoh',
+  'Hisui',
+  'Paldea',
+  'Noroteo',
+];
+
+// Lista de las ediciones de los juegos de Pokémon
+export const gameEditions = [
+  'Let’s Go, Pikachu! y Let’s Go, Eevee!',
+  'Espada',
+  'Escudo',
+  'Diamante Brillante',
+  'Perla Reluciente',
+  'Leyendas: Arceus',
+  'Escarlata',
+  'Púrpura',
 ];
