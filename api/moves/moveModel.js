@@ -12,13 +12,13 @@ const client = new MongoClient(process.env.MONGODB_URI, {
 // Conexión a la base de datos
 async function connect(collection) {
   await client.connect();
-  return client.db('pokemondb').collection(collection);
+  const db = client.db('pokemondb').collection(collection);
+  return { db, close: () => client.close() };
 }
 
 export class MoveModel {
   // Obtener todos los movimientos
   static async getAll({ tipo, nombre }) {
-    const db = await connect('moves');
     let query = {};
     if (tipo) query.type = { $regex: new RegExp(`${tipo}`, 'i') };
     if (nombre)
@@ -26,28 +26,33 @@ export class MoveModel {
         { 'name.spanish': { $regex: new RegExp(`${nombre}`, 'i') } },
         { 'name.english': { $regex: new RegExp(`${nombre}`, 'i') } },
       ];
-    return db.find(query).sort({ 'name.spanish': 1 }).toArray();
+    const { db, close } = await connect('moves');
+    const moves = await db.find(query).sort({ 'name.spanish': 1 }).toArray();
+    await close();
+    return moves;
   }
 
   // Obtener un movimiento por ID
   static async getById({ id }) {
-    const db = await connect('moves');
+    const { db, close } = await connect('moves');
     const move = await db.findOne({ _id: new ObjectId(id) });
+    await close();
     if (!move) throw new Error('NOT_FOUND');
     return move;
   }
 
   // Crear un nuevo movimiento
   static async create({ input }) {
-    const db = await connect('moves');
     input.lastModified = new Date().toLocaleString();
+    const { db, close } = await connect('moves');
     const { insertedId } = await db.insertOne(input);
+    await close();
     return { _id: insertedId, ...input };
   }
 
   // Eliminar un movimiento
   static async delete({ id }) {
-    const pokemonDb = await connect('pokemon');
+    const { db: pokemonDb, close: closePokemonDb } = await connect('pokemon');
     const allPokemon = await pokemonDb
       .find({
         $or: [
@@ -57,6 +62,7 @@ export class MoveModel {
         ],
       })
       .toArray();
+    await closePokemonDb();
 
     if (allPokemon.length > 0)
       throw {
@@ -64,24 +70,26 @@ export class MoveModel {
         pokemon: allPokemon.map((pokemon) => pokemon.name),
       };
 
-    const db = await connect('moves');
+    const { db, close } = await connect('moves');
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
+    await close();
     if (deletedCount === 0) throw new Error('NOT_FOUND');
   }
 
   // Actualizar un movimiento
   static async update({ id, input }) {
-    const movesdb = await connect('moves');
+    const { db: movesdb, close: closeMovesdb } = await connect('moves');
     input.lastModified = new Date().toLocaleString();
     const updatedMove = await movesdb.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
       { returnDocument: 'after' }
     );
+    await closeMovesdb();
     if (!updatedMove) throw new Error('NOT_FOUND');
     delete updatedMove.lastModified;
 
-    const pokemonDb = await connect('pokemon');
+    const { db: pokemonDb, close: closePokemonDb } = await connect('pokemon');
     const allPokemon = await pokemonDb
       .find({
         $or: [
@@ -97,15 +105,12 @@ export class MoveModel {
         pokemon.moves.moveByLevel = pokemon.moves.moveByLevel.map((moveObj) =>
           moveObj.move._id.toString() === id ? updatedMove : moveObj
         );
-
         pokemon.moves.movesByMt = pokemon.moves.movesByMt.map((move) =>
           move._id.toString() === id ? updatedMove : move
         );
-
         pokemon.moves.movesByEgg = pokemon.moves.movesByEgg.map((move) =>
           move._id.toString() === id ? updatedMove : move
         );
-
         return {
           updateOne: {
             filter: { _id: pokemon._id },
@@ -114,8 +119,8 @@ export class MoveModel {
         };
       })
     );
-
     if (bulkUpdate.length > 0) await pokemonDb.bulkWrite(bulkUpdate);
+    await closePokemonDb();
 
     updatedMove.updatedPokemon = allPokemon.map((pokemon) => pokemon.name);
     return updatedMove;

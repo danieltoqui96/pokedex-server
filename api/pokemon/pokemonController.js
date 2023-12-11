@@ -79,7 +79,13 @@ export class PokemonController {
       if (error.message === 'NOT_FOUND_MOVE')
         return res.status(404).json({
           status: 'error',
-          message: 'Movimiento no encontrada',
+          message: 'Movimiento no encontrado',
+          id: error.id,
+        });
+      if (error.message === 'MOVE_IS_NOT_MT')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Movimiento no es mt',
           id: error.id,
         });
       const errorId = randomUUID();
@@ -145,7 +151,13 @@ export class PokemonController {
       if (error.message === 'NOT_FOUND_MOVE')
         return res.status(404).json({
           status: 'error',
-          message: 'Habilidad no encontrada',
+          message: 'Movimiento no encontrado',
+          id: error.id,
+        });
+      if (error.message === 'MOVE_IS_NOT_MT')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Movimiento no es mt',
           id: error.id,
         });
       if (error.message === 'NOT_FOUND')

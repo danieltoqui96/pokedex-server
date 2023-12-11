@@ -2,7 +2,7 @@
 GET http://localhost:3000/abilities
 
 ### Recuperar una habilidad por id
-GET http://localhost:3000/abilities/65651aeec8b8fffd9c697b58
+GET http://localhost:3000/abilities/65767c7964ff462fe7ecd504
 
 ### Recuperar todas las habilidades por nombre
 GET http://localhost:3000/abilities?nombre=
@@ -20,7 +20,7 @@ Content-Type: application/json
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/65752a1f4540df3eed3423b4
+DELETE http://localhost:3000/abilities/65774f30905919fbb3ed2d2d
 
 ### Actualizar una habilidad
 PATCH http://localhost:3000/abilities/65767c7964ff462fe7ecd504
