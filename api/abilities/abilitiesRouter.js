@@ -1,13 +1,11 @@
-// Importamos las dependencias necesarias
 import { Router } from 'express';
 import { AbilitiesController } from './abilitiesController.js';
 
-// Creamos un nuevo router
 export const abilitiesRouter = Router();
 
-// Definimos las rutas para nuestra API de Pokémon
-abilitiesRouter.get('/', AbilitiesController.getAll); // Obtiene todas las habilidades
-abilitiesRouter.get('/:id', AbilitiesController.getById); // Obtiene una habilidad por su ID
-abilitiesRouter.post('/', AbilitiesController.create); // Crea una nueva habilidad
-abilitiesRouter.delete('/:id', AbilitiesController.delete); // Elimina una habilidad por su ID
-abilitiesRouter.patch('/:id', AbilitiesController.update); // Actualiza una habilidad por su ID
+// Rutas de la API de habilidades de Pokémon
+abilitiesRouter.get('/', AbilitiesController.getAll); // Obtener todas las habilidades
+abilitiesRouter.get('/:id', AbilitiesController.getById); // Obtener una habilidad por ID
+abilitiesRouter.post('/', AbilitiesController.create); // Crear una nueva habilidad
+abilitiesRouter.delete('/:id', AbilitiesController.delete); // Eliminar una habilidad por ID
+abilitiesRouter.patch('/:id', AbilitiesController.update); // Actualizar una habilidad por ID

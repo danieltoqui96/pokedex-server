@@ -1,4 +1,3 @@
-// Importamos las dependencias necesarias
 import { AbilityModel } from './abilityModel.js';
 import {
   validateAbility,
@@ -6,9 +5,8 @@ import {
 } from '../../schemas/abilitySchema.js';
 import { randomUUID } from 'node:crypto';
 
-// Definimos la clase AbilitiesController
 export class AbilitiesController {
-  // Método para obtener todas las habilidades
+  // Obtener todas las habilidades
   static async getAll(req, res) {
     try {
       const { nombre } = req.query;
@@ -20,7 +18,7 @@ export class AbilitiesController {
       });
     } catch (error) {
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar habilidades',
@@ -29,7 +27,7 @@ export class AbilitiesController {
     }
   }
 
-  // Método para obtener una habilidad por su ID
+  // Obtener una habilidad por ID
   static async getById(req, res) {
     try {
       const { id } = req.params;
@@ -45,7 +43,7 @@ export class AbilitiesController {
           message: 'Habilidad no encontrada',
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar habilidad',
@@ -54,7 +52,7 @@ export class AbilitiesController {
     }
   }
 
-  // Método para crear una nueva habilidad
+  // Crear una nueva habilidad
   static async create(req, res) {
     try {
       const result = validateAbility(req.body);
@@ -73,7 +71,7 @@ export class AbilitiesController {
           error: JSON.parse(error.result.error),
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al crear habilidad',
@@ -82,26 +80,26 @@ export class AbilitiesController {
     }
   }
 
-  // Método para eliminar una habilidad por su ID
+  // Eliminar una habilidad
   static async delete(req, res) {
     try {
       const { id } = req.params;
       await AbilityModel.delete({ id });
       res.json({ status: 'success', message: 'Habilidad eliminada' });
     } catch (error) {
-      if (error.message === 'NOT_FOUND')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Habilidad no encontrada',
-        });
       if (error.message === 'ABILITY_IN_USE')
         return res.status(409).json({
           status: 'error',
           message: 'Habilidad en uso',
           error: `Habilidad presente en: ${error.pokemon.join(', ')}`,
         });
+      if (error.message === 'NOT_FOUND')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Habilidad no encontrada',
+        });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al eliminar habilidad',
@@ -110,7 +108,7 @@ export class AbilitiesController {
     }
   }
 
-  // Método para actualizar una habilidad por su ID
+  // Actualizar una habilidad
   static async update(req, res) {
     try {
       const result = validatePartialAbility(req.body);
@@ -138,7 +136,7 @@ export class AbilitiesController {
           message: 'Habilidad no encontrada',
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al actualizar habilidad',

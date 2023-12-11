@@ -1,8 +1,6 @@
-// Importamos las dependencias necesarias
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 import 'dotenv/config';
 
-// Creamos una nueva instancia de MongoClient con la URI de MongoDB y las opciones del servidor
 const client = new MongoClient(process.env.MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -11,15 +9,14 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   },
 });
 
-// Función para conectar a la base de datos y obtener la colección
+// Conexión a la base de datos
 async function connect(collection) {
   await client.connect();
   return client.db('pokemondb').collection(collection);
 }
 
-// Definimos la clase AbilityModel
 export class AbilityModel {
-  // Método para obtener todas las habilidades
+  // Obtener todas las habilidades
   static async getAll({ nombre }) {
     const db = await connect('abilities');
     let query = {};
@@ -31,7 +28,7 @@ export class AbilityModel {
     return db.find(query).sort({ 'name.spanish': 1 }).toArray();
   }
 
-  // Método para obtener una habilidad por su ID
+  // Obtener una habilidad por ID
   static async getById({ id }) {
     const db = await connect('abilities');
     const ability = await db.findOne({ _id: new ObjectId(id) });
@@ -39,7 +36,7 @@ export class AbilityModel {
     return ability;
   }
 
-  // Método para crear una nueva habilidad
+  // Crear una nueva habilidad
   static async create({ input }) {
     const db = await connect('abilities');
     input.lastModified = new Date().toLocaleString();
@@ -47,7 +44,7 @@ export class AbilityModel {
     return { _id: insertedId, ...input };
   }
 
-  // Método para eliminar una habilidad por su ID
+  // Eliminar una habilidad
   static async delete({ id }) {
     const pokemonDb = await connect('pokemon');
     const allPokemon = await pokemonDb
@@ -70,7 +67,7 @@ export class AbilityModel {
     if (deletedCount === 0) throw new Error('NOT_FOUND');
   }
 
-  // Método para actualizar una habilidad por su ID
+  // Actualizar una habilidad
   static async update({ id, input }) {
     const abilitiesDb = await connect('abilities');
     input.lastModified = new Date().toLocaleString();
@@ -92,7 +89,7 @@ export class AbilityModel {
       })
       .toArray();
 
-    const bulkWriteOperations = await Promise.all(
+    const bulkUpdate = await Promise.all(
       allPokemon.map(async (pokemon) => {
         pokemon.abilities.normal = pokemon.abilities.normal.map((ability) =>
           ability._id.toString() === id ? updatedAbility : ability
@@ -111,8 +108,7 @@ export class AbilityModel {
       })
     );
 
-    if (bulkWriteOperations.length > 0)
-      await pokemonDb.bulkWrite(bulkWriteOperations);
+    if (bulkUpdate.length > 0) await pokemonDb.bulkWrite(bulkUpdate);
 
     updatedAbility.updatedPokemon = allPokemon.map((pokemon) => pokemon.name);
     return updatedAbility;

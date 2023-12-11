@@ -1,13 +1,11 @@
-// Importamos las dependencias necesarias
 import { Router } from 'express';
 import { MovesController } from './movesController.js';
 
-// Creamos un nuevo router
 export const movesRouter = Router();
 
-// Definimos las rutas para nuestra API de Pokémon
-movesRouter.get('/', MovesController.getAll); // Obtiene todos los movimientos
-movesRouter.get('/:id', MovesController.getById); // Obtiene un moviimento por su ID
-movesRouter.post('/', MovesController.create); // Crea una nuevo movimiento
-movesRouter.delete('/:id', MovesController.delete); // Elimina un movimiento por su ID
-movesRouter.patch('/:id', MovesController.update); // Actualiza un movimiento por su ID
+// Rutas de la API de movimientos de Pokémon
+movesRouter.get('/', MovesController.getAll); // Obtener todos los movimientos
+movesRouter.get('/:id', MovesController.getById); // Obtener un movimiento por ID
+movesRouter.post('/', MovesController.create); // Crear un nuevo movimiento
+movesRouter.delete('/:id', MovesController.delete); // Eliminar un movimiento por ID
+movesRouter.patch('/:id', MovesController.update); // Actualizar un movimiento por ID

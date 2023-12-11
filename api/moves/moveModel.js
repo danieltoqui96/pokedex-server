@@ -1,8 +1,6 @@
-// Importamos las dependencias necesarias
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 import 'dotenv/config';
 
-// Creamos una nueva instancia de MongoClient con la URI de MongoDB y las opciones del servidor
 const client = new MongoClient(process.env.MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -11,15 +9,14 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   },
 });
 
-// Función para conectar a la base de datos y obtener la colección
+// Conexión a la base de datos
 async function connect(collection) {
   await client.connect();
   return client.db('pokemondb').collection(collection);
 }
 
-// Definimos la clase MoveModel
 export class MoveModel {
-  // Método para obtener todos los movimientos
+  // Obtener todos los movimientos
   static async getAll({ tipo, nombre }) {
     const db = await connect('moves');
     let query = {};
@@ -32,7 +29,7 @@ export class MoveModel {
     return db.find(query).sort({ 'name.spanish': 1 }).toArray();
   }
 
-  // Método para obtener un movimiento por su ID
+  // Obtener un movimiento por ID
   static async getById({ id }) {
     const db = await connect('moves');
     const move = await db.findOne({ _id: new ObjectId(id) });
@@ -40,7 +37,7 @@ export class MoveModel {
     return move;
   }
 
-  // Método para crear un nuevo movimiento
+  // Crear un nuevo movimiento
   static async create({ input }) {
     const db = await connect('moves');
     input.lastModified = new Date().toLocaleString();
@@ -48,7 +45,7 @@ export class MoveModel {
     return { _id: insertedId, ...input };
   }
 
-  // Método para eliminar un movimiento por su ID
+  // Eliminar un movimiento
   static async delete({ id }) {
     const pokemonDb = await connect('pokemon');
     const allPokemon = await pokemonDb
@@ -72,7 +69,7 @@ export class MoveModel {
     if (deletedCount === 0) throw new Error('NOT_FOUND');
   }
 
-  // Método para actualizar un movimiento por su ID
+  // Actualizar un movimiento
   static async update({ id, input }) {
     const movesdb = await connect('moves');
     input.lastModified = new Date().toLocaleString();
@@ -95,7 +92,7 @@ export class MoveModel {
       })
       .toArray();
 
-    const bulkWriteOperations = await Promise.all(
+    const bulkUpdate = await Promise.all(
       allPokemon.map(async (pokemon) => {
         pokemon.moves.moveByLevel = pokemon.moves.moveByLevel.map((moveObj) =>
           moveObj.move._id.toString() === id ? updatedMove : moveObj
@@ -118,8 +115,7 @@ export class MoveModel {
       })
     );
 
-    if (bulkWriteOperations.length > 0)
-      await pokemonDb.bulkWrite(bulkWriteOperations);
+    if (bulkUpdate.length > 0) await pokemonDb.bulkWrite(bulkUpdate);
 
     updatedMove.updatedPokemon = allPokemon.map((pokemon) => pokemon.name);
     return updatedMove;

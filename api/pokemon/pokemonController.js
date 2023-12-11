@@ -1,4 +1,3 @@
-// Importamos las dependencias necesarias
 import { PokemonModel } from './pokemonModel.js';
 import {
   validatePokemon,
@@ -6,9 +5,8 @@ import {
 } from '../../schemas/pokemonSchema.js';
 import { randomUUID } from 'node:crypto';
 
-// Definimos la clase PokemonController
 export class PokemonController {
-  // Método para obtener todos los Pokémon
+  // Obtener todos los Pokémon
   static async getAll(req, res) {
     try {
       const { tipo, nombre } = req.query;
@@ -20,7 +18,7 @@ export class PokemonController {
       });
     } catch (error) {
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar los Pokémon',
@@ -29,7 +27,7 @@ export class PokemonController {
     }
   }
 
-  // Método para obtener un Pokémon por su ID
+  // Obtener un Pokémon por ID
   static async getById(req, res) {
     try {
       const { id } = req.params;
@@ -45,7 +43,7 @@ export class PokemonController {
           message: 'Pokémon no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar los Pokémon',
@@ -54,7 +52,7 @@ export class PokemonController {
     }
   }
 
-  // Método para crear un nuevo Pokémon
+  // Crear un nuevo Pokémon
   static async create(req, res) {
     try {
       const result = validatePokemon(req.body);
@@ -78,8 +76,14 @@ export class PokemonController {
           message: 'Habilidad no encontrada',
           id: error.id,
         });
+      if (error.message === 'NOT_FOUND_MOVE')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Movimiento no encontrada',
+          id: error.id,
+        });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al crear el Pokémon',
@@ -88,7 +92,7 @@ export class PokemonController {
     }
   }
 
-  // Método para eliminar un Pokémon por su ID
+  // Eliminar un Pokémon por ID
   static async delete(req, res) {
     try {
       const { id } = req.params;
@@ -101,7 +105,7 @@ export class PokemonController {
           message: 'Pokémon no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al eliminar el Pokémon',
@@ -110,7 +114,7 @@ export class PokemonController {
     }
   }
 
-  // Método para actualizar un Pokémon por su ID
+  // Actualizar un Pokémon por ID
   static async update(req, res) {
     try {
       const result = validatePartialPokemon(req.body);
@@ -138,13 +142,19 @@ export class PokemonController {
           message: 'Habilidad no encontrada',
           id: error.id,
         });
+      if (error.message === 'NOT_FOUND_MOVE')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Habilidad no encontrada',
+          id: error.id,
+        });
       if (error.message === 'NOT_FOUND')
         return res.status(404).json({
           status: 'error',
           message: 'Pokémon no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al actualizar el Pokémon',

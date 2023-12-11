@@ -1,11 +1,9 @@
-// Importamos las dependencias necesarias
 import { MoveModel } from './moveModel.js';
 import { validateMove, validatePartialMove } from '../../schemas/moveSchema.js';
 import { randomUUID } from 'node:crypto';
 
-// Definimos la clase MovesController
 export class MovesController {
-  // Método para obtener todos los movimientos
+  // Obtener todos los movimientos
   static async getAll(req, res) {
     try {
       const { tipo, nombre } = req.query;
@@ -17,7 +15,7 @@ export class MovesController {
       });
     } catch (error) {
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar movimientos',
@@ -26,7 +24,7 @@ export class MovesController {
     }
   }
 
-  // Método para obtener un movimiento por su ID
+  // Obtener un movimiento por ID
   static async getById(req, res) {
     try {
       const { id } = req.params;
@@ -42,7 +40,7 @@ export class MovesController {
           message: 'Movimiento no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar movimiento',
@@ -51,7 +49,7 @@ export class MovesController {
     }
   }
 
-  // Método para crear un nuevo movimiento
+  // Crear un nuevo movimiento
   static async create(req, res) {
     try {
       const result = validateMove(req.body);
@@ -70,7 +68,7 @@ export class MovesController {
           error: JSON.parse(error.result.error),
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al crear movimiento',
@@ -79,26 +77,26 @@ export class MovesController {
     }
   }
 
-  // Método para eliminar un movimiento por su ID
+  // Eliminar un movimiento
   static async delete(req, res) {
     try {
       const { id } = req.params;
       await MoveModel.delete({ id });
       res.json({ status: 'success', message: 'Movimiento eliminado' });
     } catch (error) {
-      if (error.message === 'NOT_FOUND')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Movimiento no encontrado',
-        });
       if (error.message === 'MOVE_IN_USE')
         return res.status(409).json({
           status: 'error',
           message: 'Movimiento en uso',
           error: `Movimiento presente en: ${error.pokemon.join(', ')}`,
         });
+      if (error.message === 'NOT_FOUND')
+        return res.status(404).json({
+          status: 'error',
+          message: 'Movimiento no encontrado',
+        });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al eliminar movimiento',
@@ -107,7 +105,7 @@ export class MovesController {
     }
   }
 
-  // Método para actualizar un movimiento por su ID
+  // Actualizar un movimiento
   static async update(req, res) {
     try {
       const result = validatePartialMove(req.body);
@@ -132,7 +130,7 @@ export class MovesController {
           message: 'Movimiento no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al actualizar movimiento',

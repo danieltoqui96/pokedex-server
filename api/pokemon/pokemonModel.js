@@ -1,8 +1,6 @@
-// Importamos las dependencias necesarias
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 import 'dotenv/config';
 
-// Creamos una nueva instancia de MongoClient con la URI de MongoDB y las opciones del servidor
 const client = new MongoClient(process.env.MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -11,15 +9,13 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   },
 });
 
-// Función para conectar a la base de datos y obtener la colección
+// Conexión a la base de datos
 async function connect(collection) {
   await client.connect();
   return client.db('pokemondb').collection(collection);
 }
-
-// Definimos la clase PokemonModel
 export class PokemonModel {
-  // Método para obtener todos los Pokémon
+  // Obtener todos los Pokémon
   static async getAll({ tipo, nombre }) {
     const db = await connect('pokemon');
     let query = {};
@@ -28,7 +24,7 @@ export class PokemonModel {
     return db.find(query).sort({ nationalNumber: 1 }).toArray();
   }
 
-  // Método para obtener un Pokémon por su ID
+  // Obtener un Pokémon por ID
   static async getById({ id }) {
     const db = await connect('pokemon');
     const pokemon = await db.findOne({ _id: new ObjectId(id) });
@@ -36,7 +32,7 @@ export class PokemonModel {
     return pokemon;
   }
 
-  // Método para crear un nuevo Pokémon
+  // Crear un nuevo Pokémon
   static async create({ input }) {
     const abilitiesDb = await connect('abilities');
     input.abilities.normal = await Promise.all(
@@ -101,14 +97,14 @@ export class PokemonModel {
     return { _id: insertedId, ...input };
   }
 
-  // Método para eliminar un Pokémon por su ID
+  // Eliminar un Pokémon
   static async delete({ id }) {
     const db = await connect('pokemon');
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
     if (deletedCount === 0) throw new Error('NOT_FOUND');
   }
 
-  // Método para actualizar un Pokémon por su ID
+  // Actualizar un Pokémon
   static async update({ id, input }) {
     if (input.abilities) {
       const abilitiesDb = await connect('abilities');

@@ -6,13 +6,15 @@ import {
   gameEditions,
 } from '../utils/constants.js';
 
+// Esquema de Pokemon
 const pokemonSchema = z.object({
-  nationalNumber: z.number().int().positive(),
-  name: z.string().min(1),
-  form: z.string().nullable(),
-  generation: z.enum(generations), // Generación del Pokemon
-  types: z.array(z.enum(types)), // Tipos del Pokemon
+  nationalNumber: z.number().int().positive(), // Número nacional
+  name: z.string().min(1), // Nombre
+  form: z.string().nullable(), // Forma
+  generation: z.enum(generations), // Generación
+  types: z.array(z.enum(types)), // Tipos
   stats: z.object({
+    // Estadísticas
     hp: z.number().int().positive(),
     attack: z.number().int().positive(),
     defense: z.number().int().positive(),
@@ -20,9 +22,10 @@ const pokemonSchema = z.object({
     specialDefense: z.number().int().positive(),
     speed: z.number().int().positive(),
   }),
-  height: z.number(),
-  weight: z.number(),
+  height: z.number(), // Altura
+  weight: z.number(), // Peso
   sprites: z.object({
+    // Sprites
     base: z.string().url().nullable(),
     home: z.object({
       normal: z.string().url().nullable(),
@@ -31,25 +34,28 @@ const pokemonSchema = z.object({
   }),
   pokedex: z
     .object({
+      // Entradas de la Pokedex
       versions: z.array(
         z.object({
-          name: z.enum(pokedex), // Paldea/Noroteo
+          name: z.enum(pokedex),
           number: z.number().int().positive(),
         })
       ),
       entries: z.array(
         z.object({
-          game: z.enum(gameEditions), // Escarlata/Púrpura
+          game: z.enum(gameEditions),
           info: z.string(),
         })
       ),
     })
     .nullable(),
   abilities: z.object({
+    // Habilidades
     normal: z.array(z.string()),
     hidden: z.string().nullable(),
   }),
   moves: z.object({
+    // Movimientos
     moveByLevel: z.array(
       z.object({
         move: z.string(),
@@ -61,10 +67,12 @@ const pokemonSchema = z.object({
   }),
 });
 
+// Validar un Pokemon completo
 export function validatePokemon(input) {
   return pokemonSchema.safeParse(input);
 }
 
+// Validar un Pokemon parcial
 export function validatePartialPokemon(input) {
   return pokemonSchema.partial().safeParse(input);
 }

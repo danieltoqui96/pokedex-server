@@ -1,4 +1,4 @@
-// Lista de las generaciones de los juegos de Pokémon
+// Generaciones de los juegos de Pokémon
 export const generations = [
   'i',
   'ii',
@@ -11,7 +11,7 @@ export const generations = [
   'ix',
 ];
 
-// Lista de los tipos de Pokémon
+// Tipos de Pokémon
 export const types = [
   'normal',
   'fuego',
@@ -33,11 +33,11 @@ export const types = [
   'hada',
 ];
 
-// Lista de los nombres de las Pokedex en los juegos de Pokémon
+// Nombres de las Pokedex en los juegos de Pokémon
 export const pokedex = ['Paldea', 'Noroteo'];
 
-// Lista de las ediciones de los juegos de Pokémon
+// Ediciones de los juegos de Pokémon
 export const gameEditions = ['Escarlata', 'Púrpura'];
 
-// Lista de las clases de los movimientos de Pokémon
+// Clases de los movimientos de Pokémon
 export const moveClasses = ['físico', 'especial', 'estado'];
