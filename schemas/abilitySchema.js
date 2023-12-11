@@ -5,7 +5,7 @@ const abilitySchema = z.object({
     spanish: z.string().min(1),
     english: z.string().min(1),
   }),
-  description: z.string().nullable(),
+  info: z.string().nullable(),
 });
 
 export function validateAbility(input) {

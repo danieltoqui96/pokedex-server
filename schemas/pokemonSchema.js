@@ -2,8 +2,6 @@ import z from 'zod';
 import {
   generations,
   types,
-  games,
-  regions,
   pokedex,
   gameEditions,
 } from '../utils/constants.js';
@@ -22,6 +20,8 @@ const pokemonSchema = z.object({
     specialDefense: z.number().int().positive(),
     speed: z.number().int().positive(),
   }),
+  height: z.number(),
+  weight: z.number(),
   sprites: z.object({
     base: z.string().url().nullable(),
     home: z.object({
@@ -29,35 +29,36 @@ const pokemonSchema = z.object({
       shiny: z.string().url().nullable(),
     }),
   }),
-  gameData: z.array(
-    z.object({
-      games: z.enum(games), // Escarlata y Púrpura,
-      region: z.enum(regions), // Paldea
-      pokedex: z
-        .array(
-          z.object({
-            versions: z.array(
-              z.object({
-                name: z.enum(pokedex), // Paldea/Noroteo
-                number: z.number().int().positive(),
-              })
-            ),
-            entries: z.array(
-              z.object({
-                game: z.enum(gameEditions), // Escarlata/Púrpura
-                info: z.string(),
-              })
-            ),
-          })
-        )
-        .nullable(),
-      abilities: z.object({
-        normal: z.array(z.string()),
-        hidden: z.string().nullable(),
-      }),
-      moves: z.array(z.string()),
+  pokedex: z
+    .object({
+      versions: z.array(
+        z.object({
+          name: z.enum(pokedex), // Paldea/Noroteo
+          number: z.number().int().positive(),
+        })
+      ),
+      entries: z.array(
+        z.object({
+          game: z.enum(gameEditions), // Escarlata/Púrpura
+          info: z.string(),
+        })
+      ),
     })
-  ), // Array de datos del juego
+    .nullable(),
+  abilities: z.object({
+    normal: z.array(z.string()),
+    hidden: z.string().nullable(),
+  }),
+  moves: z.object({
+    moveByLevel: z.array(
+      z.object({
+        move: z.string(),
+        level: z.number().int(),
+      })
+    ),
+    movesByMt: z.array(z.string()),
+    movesByEgg: z.array(z.string()),
+  }),
 });
 
 export function validatePokemon(input) {

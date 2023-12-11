@@ -20,7 +20,7 @@ export class PokemonController {
       });
     } catch (error) {
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar los Pokémon',
@@ -45,7 +45,7 @@ export class PokemonController {
           message: 'Pokémon no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al recuperar los Pokémon',
@@ -79,7 +79,7 @@ export class PokemonController {
           id: error.id,
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al crear el Pokémon',
@@ -101,7 +101,7 @@ export class PokemonController {
           message: 'Pokémon no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al eliminar el Pokémon',
@@ -144,7 +144,7 @@ export class PokemonController {
           message: 'Pokémon no encontrado',
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al actualizar el Pokémon',

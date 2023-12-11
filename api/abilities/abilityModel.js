@@ -49,15 +49,12 @@ export class AbilityModel {
 
   // Método para eliminar una habilidad por su ID
   static async delete({ id }) {
-    // Conectarse a la colección de Pokémon
     const pokemonDb = await connect('pokemon');
-
-    // Encontrar todos los Pokémon que tienen la habilidad que se está eliminando
     const allPokemon = await pokemonDb
       .find({
         $or: [
-          { 'gameData.abilities.normal._id': new ObjectId(id) },
-          { 'gameData.abilities.hidden._id': new ObjectId(id) },
+          { 'abilities.normal._id': new ObjectId(id) },
+          { 'abilities.hidden._id': new ObjectId(id) },
         ],
       })
       .toArray();
@@ -68,7 +65,6 @@ export class AbilityModel {
         pokemon: allPokemon.map((pokemon) => pokemon.name),
       };
 
-    // Conectarse a la colección de habilidades
     const db = await connect('abilities');
     const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
     if (deletedCount === 0) throw new Error('NOT_FOUND');
@@ -76,71 +72,49 @@ export class AbilityModel {
 
   // Método para actualizar una habilidad por su ID
   static async update({ id, input }) {
-    // Conectarse a la colección de habilidades
     const abilitiesDb = await connect('abilities');
     input.lastModified = new Date().toLocaleString();
-
-    // Actualizar la habilidad en la base de datos de habilidades
     const updatedAbility = await abilitiesDb.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
       { returnDocument: 'after' }
     );
-
     if (!updatedAbility) throw new Error('NOT_FOUND');
-
     delete updatedAbility.lastModified;
 
-    // Conectarse a la colección de Pokémon
     const pokemonDb = await connect('pokemon');
-
-    // Encontrar todos los Pokémon que tienen la habilidad que se está actualizando
     const allPokemon = await pokemonDb
       .find({
         $or: [
-          { 'gameData.abilities.normal._id': new ObjectId(id) },
-          { 'gameData.abilities.hidden._id': new ObjectId(id) },
+          { 'abilities.normal._id': new ObjectId(id) },
+          { 'abilities.hidden._id': new ObjectId(id) },
         ],
       })
       .toArray();
 
-    // Para cada Pokémon, actualizar los datos de la habilidad
     const bulkWriteOperations = await Promise.all(
       allPokemon.map(async (pokemon) => {
-        // Para cada juego en los datos del juego del Pokémon
-        for (let game of pokemon.gameData) {
-          // Actualizar las habilidades normales
-          game.abilities.normal = game.abilities.normal.map((ability) =>
-            ability._id.toString() === id ? updatedAbility : ability
-          );
-
-          // Actualizar la habilidad oculta si coincide con la habilidad que se está actualizando
-          if (
-            game.abilities.hidden &&
-            game.abilities.hidden._id.toString() === id
-          )
-            game.abilities.hidden = updatedAbility;
-        }
-
-        // Devolver una operación de actualización para este Pokémon
+        pokemon.abilities.normal = pokemon.abilities.normal.map((ability) =>
+          ability._id.toString() === id ? updatedAbility : ability
+        );
+        if (
+          pokemon.abilities.hidden &&
+          pokemon.abilities.hidden._id.toString() === id
+        )
+          pokemon.abilities.hidden = updatedAbility;
         return {
           updateOne: {
             filter: { _id: pokemon._id },
-            update: { $set: { gameData: pokemon.gameData } },
+            update: { $set: { abilities: pokemon.abilities } },
           },
         };
       })
     );
 
-    // Si hay operaciones de actualización, realizar una operación de escritura masiva
-    if (bulkWriteOperations.length > 0) {
+    if (bulkWriteOperations.length > 0)
       await pokemonDb.bulkWrite(bulkWriteOperations);
-    }
 
-    // Añadir los nombres de los Pokémon actualizados a la habilidad actualizada
     updatedAbility.updatedPokemon = allPokemon.map((pokemon) => pokemon.name);
-
-    // Devolver la habilidad actualizada
     return updatedAbility;
   }
 }

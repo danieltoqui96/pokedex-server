@@ -20,10 +20,10 @@ export class AbilitiesController {
       });
     } catch (error) {
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'Ocurrió un error al recuperar las habilidades',
+        message: 'Ocurrió un error al recuperar habilidades',
         errorId: errorId,
       });
     }
@@ -45,10 +45,10 @@ export class AbilitiesController {
           message: 'Habilidad no encontrada',
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'Ocurrió un error al recuperar la habilidad',
+        message: 'Ocurrió un error al recuperar habilidad',
         errorId: errorId,
       });
     }
@@ -73,10 +73,10 @@ export class AbilitiesController {
           error: JSON.parse(error.result.error),
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'Ocurrió un error al crear la habilidad',
+        message: 'Ocurrió un error al crear habilidad',
         errorId: errorId,
       });
     }
@@ -101,10 +101,10 @@ export class AbilitiesController {
           error: `Habilidad presente en: ${error.pokemon.join(', ')}`,
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'Ocurrió un error al eliminar la habilidad',
+        message: 'Ocurrió un error al eliminar habilidad',
         errorId: errorId,
       });
     }
@@ -138,10 +138,10 @@ export class AbilitiesController {
           message: 'Habilidad no encontrada',
         });
       const errorId = randomUUID();
-      console.error(`🔴 ErrorId [${errorId}] -> `, error.message);
+      console.error(`🔴 Error Id [${errorId}] -> `, error.message);
       res.status(500).json({
         status: 'error',
-        message: 'Ocurrió un error al actualizar la habilidad',
+        message: 'Ocurrió un error al actualizar habilidad',
         errorId: errorId,
       });
     }

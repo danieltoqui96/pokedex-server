@@ -12,25 +12,28 @@ POST http://localhost:3000/moves
 Content-Type: application/json
 
 {
-  "nameSp": "Golpe roca",
-  "nameEn": "Rock Smash ",
-  "type": "lucha",
-  "class": "físico",
-  "power": 40,
-  "accuracy": 100,
-  "pp": 15,
-  "description": "Propina un gran puñetazo que puede reducir la Defensa del objetivo.",
-  "mt": null
+  "name": {
+        "spanish": "asdsad",
+        "english": "Mega Punch"
+      },
+  "type": "normal",
+          "class": "físico",
+          "power": 80,
+          "accuracy": 85,
+          "pp": 20,
+          "effect": null,
+          "info": "Puñetazo de gran potencia.",
+          "mt": null
 }
 
 ### Borrar un movimiento
-DELETE http://localhost:3000/moves/654aef777f9a476e1d77ea6f
+DELETE http://localhost:3000/moves/65767dd85d1ec02331a6d15d
 
 ### Actualizar un movimiento
-PATCH http://localhost:3000/moves/65482f777d70a0397d93b7f2
+PATCH http://localhost:3000/moves/65767dd85d1ec02331a6d15d
 Content-Type: application/json
 
 {
-  "nameEn": "onda vital"
+"type": "normal"
 }
 

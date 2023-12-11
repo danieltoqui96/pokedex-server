@@ -38,31 +38,63 @@ export class PokemonModel {
 
   // Método para crear un nuevo Pokémon
   static async create({ input }) {
-    // Conectarse a la colección de habilidades
     const abilitiesDb = await connect('abilities');
-    for (let game of input.gameData) {
-      // Busca habilidades
-      game.abilities.normal = await Promise.all(
-        game.abilities.normal.map(async (id) => {
-          const ability = await abilitiesDb.findOne(
-            { _id: new ObjectId(id) },
-            { projection: { lastModified: 0 } }
-          );
-          if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
-          return ability; // Retorna habilidad con datos
-        }) // Genera array de habilidades
-      ); // Reemplaza por array de habilidades
+    input.abilities.normal = await Promise.all(
+      input.abilities.normal.map(async (id) => {
+        const ability = await abilitiesDb.findOne(
+          { _id: new ObjectId(id) },
+          { projection: { lastModified: 0 } }
+        );
+        if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
+        return ability;
+      })
+    );
 
-      // Busca habilidad oculta
-      game.abilities.hidden = await abilitiesDb.findOne(
-        { _id: new ObjectId(game.abilities.hidden) },
-        { projection: { lastModified: 0 } }
-      );
-      if (!game.abilities.hidden)
-        throw { message: 'NOT_FOUND_ABILITY', id: game.abilities.hidden };
-    }
+    input.abilities.hidden = await abilitiesDb.findOne(
+      { _id: new ObjectId(input.abilities.hidden) },
+      { projection: { lastModified: 0 } }
+    );
+    if (!input.abilities.hidden)
+      throw { message: 'NOT_FOUND_ABILITY', id: input.abilities.hidden };
 
-    // Conectarse a la colección de Pokémon
+    const movesDb = await connect('moves');
+    input.moves.moveByLevel = await Promise.all(
+      input.moves.moveByLevel.map(async (moveObj) => {
+        const move = await movesDb.findOne(
+          { _id: new ObjectId(moveObj.move) },
+          { projection: { lastModified: 0 } }
+        );
+        if (!move) throw { message: 'NOT_FOUND_MOVE', id: moveObj.move };
+        return {
+          move: move,
+          level: moveObj.level,
+        };
+      })
+    );
+
+    // Validar que el movimiento sea mt
+    input.moves.movesByMt = await Promise.all(
+      input.moves.movesByMt.map(async (id) => {
+        const move = await movesDb.findOne(
+          { _id: new ObjectId(id) },
+          { projection: { lastModified: 0 } }
+        );
+        if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
+        return move;
+      })
+    );
+
+    input.moves.movesByEgg = await Promise.all(
+      input.moves.movesByEgg.map(async (id) => {
+        const move = await movesDb.findOne(
+          { _id: new ObjectId(id) },
+          { projection: { lastModified: 0 } }
+        );
+        if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
+        return move;
+      })
+    );
+
     const pokemonDb = await connect('pokemon');
     input.lastModified = new Date().toLocaleString();
     const { insertedId } = await pokemonDb.insertOne(input);
@@ -78,33 +110,66 @@ export class PokemonModel {
 
   // Método para actualizar un Pokémon por su ID
   static async update({ id, input }) {
-    // Conectarse a la colección de habilidades
-    const abilitiesDb = await connect('abilities');
-    if (input.gameData) {
-      for (let game of input.gameData) {
-        // Busca habilidades
-        game.abilities.normal = await Promise.all(
-          game.abilities.normal.map(async (id) => {
-            const ability = await abilitiesDb.findOne(
-              { _id: new ObjectId(id) },
-              { projection: { lastModified: 0 } }
-            );
-            if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
-            return ability; // Habilidad con datos
-          }) // Genera array de habilidades
-        ); // Reemplaza por array de habilidades
+    if (input.abilities) {
+      const abilitiesDb = await connect('abilities');
+      input.abilities.normal = await Promise.all(
+        input.abilities.normal.map(async (id) => {
+          const ability = await abilitiesDb.findOne(
+            { _id: new ObjectId(id) },
+            { projection: { lastModified: 0 } }
+          );
+          if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
+          return ability;
+        })
+      );
 
-        // Busca habilidad oculta
-        game.abilities.hidden = await abilitiesDb.findOne(
-          { _id: new ObjectId(game.abilities.hidden) },
-          { projection: { lastModified: 0 } }
-        );
-        if (!game.abilities.hidden)
-          throw { message: 'NOT_FOUND_ABILITY', id: game.abilities.hidden };
-      }
+      input.abilities.hidden = await abilitiesDb.findOne(
+        { _id: new ObjectId(input.abilities.hidden) },
+        { projection: { lastModified: 0 } }
+      );
+      if (!input.abilities.hidden)
+        throw { message: 'NOT_FOUND_ABILITY', id: input.abilities.hidden };
     }
 
-    // Conectarse a la colección de Pokémon
+    if (input.moves) {
+      const movesDb = await connect('moves');
+      input.moves.moveByLevel = await Promise.all(
+        input.moves.moveByLevel.map(async (moveObj) => {
+          const move = await movesDb.findOne(
+            { _id: new ObjectId(moveObj.move) },
+            { projection: { lastModified: 0 } }
+          );
+          if (!move) throw { message: 'NOT_FOUND_MOVE', id: moveObj.move };
+          return {
+            move: move,
+            level: moveObj.level,
+          };
+        })
+      );
+
+      input.moves.movesByMt = await Promise.all(
+        input.moves.movesByMt.map(async (id) => {
+          const move = await movesDb.findOne(
+            { _id: new ObjectId(id) },
+            { projection: { lastModified: 0 } }
+          );
+          if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
+          return move;
+        })
+      );
+
+      input.moves.movesByEgg = await Promise.all(
+        input.moves.movesByEgg.map(async (id) => {
+          const move = await movesDb.findOne(
+            { _id: new ObjectId(id) },
+            { projection: { lastModified: 0 } }
+          );
+          if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
+          return move;
+        })
+      );
+    }
+
     const pokemonDb = await connect('pokemon');
     input.lastModified = new Date().toLocaleString();
     const updatedPokemon = await pokemonDb.findOneAndUpdate(

@@ -1,17 +1,18 @@
-import z, { string } from 'zod';
-import { types } from '../utils/constants.js';
-
-const classes = ['físico', 'especial', 'estado'];
+import z from 'zod';
+import { types, moveClasses } from '../utils/constants.js';
 
 const moveSchema = z.object({
-  nameSp: z.string().min(1),
-  nameEn: z.string().min(1),
+  name: z.object({
+    spanish: z.string().min(1),
+    english: z.string().min(1),
+  }),
   type: z.enum(types),
-  class: z.enum(classes),
+  class: z.enum(moveClasses),
   power: z.number().int().positive().nullable(),
-  accuracy: z.number().int().positive(),
+  accuracy: z.number().int().positive().nullable(),
   pp: z.number().int().positive(),
-  description: z.string().nullable(),
+  effect: z.number().int().nullable(),
+  info: z.string().nullable(),
   mt: z.number().int().nullable(),
 });
 

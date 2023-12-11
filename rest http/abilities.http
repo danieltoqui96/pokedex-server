@@ -5,31 +5,31 @@ GET http://localhost:3000/abilities
 GET http://localhost:3000/abilities/65651aeec8b8fffd9c697b58
 
 ### Recuperar todas las habilidades por nombre
-GET http://localhost:3000/abilities?nombre=i
+GET http://localhost:3000/abilities?nombre=
 
 ### Crear una habilidad
 POST http://localhost:3000/abilities
 Content-Type: application/json
 
 {
-  "name":{
-    "spanish": "Nerviosismo",
-    "english": "Unnerve"
-  },
-  "description": "Pone nervioso al rival y le impide usar bayas."
+      "name": {
+        "spanish": "Velo arena",
+        "english": "Sand Veil"
+      },
+      "info": "Aumenta su evasión durante las tormentas de arena."
 }
 
 ### Borrar una habilidad
-DELETE http://localhost:3000/abilities/65651aeec8b8fffd9c697b58
+DELETE http://localhost:3000/abilities/65752a1f4540df3eed3423b4
 
 ### Actualizar una habilidad
-PATCH http://localhost:3000/abilities/65753bbea19b8937c4895f92
+PATCH http://localhost:3000/abilities/65767c7964ff462fe7ecd504
 Content-Type: application/json
 
 {
   "name": {
-    "spanish": "Madrugar",
-    "english": "Early Bird"
+    "spanish": "Absorbe fuego",
+    "english": "Flash Fire"
   }
 }
 

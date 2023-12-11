@@ -1,82 +1,83 @@
 ### Recuperar todos los Pokémon
-GET http://localhost:3000/pokemon?nombre=h&&tipo=
+GET http://localhost:3000/pokemon?nombre=&&tipo=
 
 ### Recuperar un Pokémon por id
-GET http://localhost:3000/pokemon/656525b8c8b8fffd9c697b60
+GET http://localhost:3000/pokemon/656525b8c8b8fffd9c697b6d
 
 ### Crear un Pokémon
 POST http://localhost:3000/pokemon
 Content-Type: application/json
 
 {
-  "nationalNumber": 229,
-  "name": "Houndoom",
-  "form": null,
-  "generation": "ii",
-  "types": [
-    "siniestro",
-    "fuego"
-  ],
+  "nationalNumber": 228,
+      "name": "Houndour",
+      "form": null,
+      "generation": "ii",
+      "types": [
+        "siniestro",
+        "fuego"
+      ],
   "stats": {
-    "hp": 75,
-    "attack": 90,
-    "defense": 50,
-    "specialAttack": 110,
-    "specialDefense": 80,
-    "speed": 95
-  },
+        "hp": 45,
+        "attack": 60,
+        "defense": 30,
+        "specialAttack": 80,
+        "specialDefense": 50,
+        "speed": 65
+      },
+  "height": 10.8,
+  "weight": 0.6,
   "sprites": {
-    "base": "https://img.pokemondb.net/sprites/scarlet-violet/normal/houndoom.png",
-    "home": {
-      "normal": "https://img.pokemondb.net/sprites/home/normal/houndoom.png",
-      "shiny": "https://img.pokemondb.net/sprites/home/shiny/houndoom.png"
-    }
+        "base": "https://img.pokemondb.net/sprites/scarlet-violet/normal/houndour.png",
+        "home": {
+          "normal": "https://img.pokemondb.net/sprites/home/normal/houndour.png",
+          "shiny": "https://img.pokemondb.net/sprites/home/shiny/houndour.png"
+        }
+      },
+  "pokedex":{
+    "versions": [
+      { "name": "Paldea", "number": 25 },
+      { "name": "Noroteo", "number": 123 }
+    ],
+    "entries": [
+      {
+        "game": "Escarlata",
+        "info": "Tiene suficiente inteligencia para cazar en manada. Se comunica con los demás a través de diversos aullidos."
+      },
+      {
+        "game": "Púrpura",
+        "info": "Usa diferentes tipos de aullidos para comunicarse con los de su especie o para perseguir a su presa."
+      }
+    ]
   },
-  "gameData": [
-  ]
+  "abilities": {
+        "normal": ["65767c7964ff462fe7ecd504", "65767caf5d1ec02331a6d159"],
+        "hidden": "65767ce25d1ec02331a6d15a"
+      },
+  "moves": {
+    "moveByLevel": [
+      { "move": "65767e8c3db9b748593e7c66", "level": 5 }, 
+      { "move": "65767dd85d1ec02331a6d15d", "level": 15 }
+    ],
+    "movesByMt":["65767eb93db9b748593e7c67","65767e673db9b748593e7c65"],
+    "movesByEgg": ["65767dd85d1ec02331a6d15d"]
+  }
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/657538ca9903e7e1e15417f6
+DELETE http://localhost:3000/pokemon/65753e56049522a003224d5a
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/65753e56049522a003224d5a
+PATCH http://localhost:3000/pokemon/6576827d1dd9a46f4b9f6c16
 Content-Type: application/json
 
 {
-  "gameData": [
-    {
-      "games": "Escarlata y Púrpura",
-      "region": "Paldea",
-      "pokedex": [
-        {
-          "versions": [
-            {
-            "name": "Paldea",
-            "number": 26
-            },
-            {
-              "name": "Noroteo",
-              "number": 124
-            }
-          ],
-          "entries": [
-            {
-              "game": "Escarlata",
-              "info": "Si alguien se quema con las llamas que lanza por la boca, el dolor no desaparecerá nunca."
-            },
-            {
-              "game": "Púrpura",
-              "info": "Al oír sus siniestros aullidos, los otros Pokémon se estremecen y huyen a sus nidos."
-            }
-          ]
-        }
-      ],
-      "abilities": {
-        "normal": ["65753b7ba19b8937c4895f91", "65753bbea19b8937c4895f92"],
-        "hidden": "65753bf1a19b8937c4895f93"
-      },
-      "moves": []
-    }
-  ]
+  "moves": {
+    "moveByLevel": [
+      { "move": "65767dd85d1ec02331a6d15d", "level": 5 }, 
+      { "move": "65767e673db9b748593e7c65", "level": 15 }
+    ],
+    "movesByMt":["65767e8c3db9b748593e7c66","65767eb93db9b748593e7c67"],
+    "movesByEgg": ["65767eb93db9b748593e7c67"]
+  }
 }
