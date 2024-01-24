@@ -1,5 +1,5 @@
 ### Recuperar todos los Pokémon
-GET http://localhost:3000/pokemon?nombre=&&tipo=
+GET http://localhost:3000/pokemon?
 
 ### Recuperar un Pokémon por id
 GET http://localhost:3000/pokemon/656525b8c8b8fffd9c697b6d
@@ -64,19 +64,22 @@ Content-Type: application/json
 }
 
 ### Borrar un Pokémon
-DELETE http://localhost:3000/pokemon/65753e56049522a003224d5a
+DELETE http://localhost:3000/pokemon/65b184f67d8c4f3ff86ef65f
 
 ### Actualizar un Pokémon
-PATCH http://localhost:3000/pokemon/6576827d1dd9a46f4b9f6c16
+PATCH http://localhost:3000/pokemon/65b184f67d8c4f3ff86ef65f
 Content-Type: application/json
 
 {
-  "moves": {
-    "moveByLevel": [
-      { "move": "65767dd85d1ec02331a6d15d", "level": 5 }, 
-      { "move": "65767e673db9b748593e7c65", "level": 15 }
-    ],
-    "movesByMt":["65767e8c3db9b748593e7c66","65767eb93db9b748593e7c67"],
-    "movesByEgg": ["65767eb93db9b748593e7c67"]
-  }
+  "types": [
+    "plantaa"
+  ]
+}
+
+### Crear un muchos Pokémon
+POST http://localhost:3000/pokemon/createMany
+Content-Type: application/json
+
+{
+  "route": 
 }

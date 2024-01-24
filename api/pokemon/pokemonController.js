@@ -4,16 +4,17 @@ import {
   validatePartialPokemon,
 } from '../../schemas/pokemonSchema.js';
 import { randomUUID } from 'node:crypto';
+import { readJSON } from '../../utils/readJSON.js';
 
 export class PokemonController {
   // Obtener todos los Pokémon
   static async getAll(req, res) {
     try {
-      const { tipo, nombre } = req.query;
-      const allPokemon = await PokemonModel.getAll({ tipo, nombre });
+      const { type, name } = req.query;
+      const allPokemon = await PokemonModel.getAll({ type, name });
       res.json({
         count: allPokemon.length,
-        filters: { tipo, nombre },
+        filters: { type, name },
         data: allPokemon,
       });
     } catch (error) {
@@ -33,7 +34,7 @@ export class PokemonController {
       const { id } = req.params;
       const pokemon = await PokemonModel.getById({ id });
       res.json({
-        status: 'success',
+        id: id,
         data: pokemon,
       });
     } catch (error) {
@@ -41,6 +42,7 @@ export class PokemonController {
         return res.status(404).json({
           status: 'error',
           message: 'Pokémon no encontrado',
+          id: error.id,
         });
       const errorId = randomUUID();
       console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
@@ -59,7 +61,6 @@ export class PokemonController {
       if (!result.success) throw { message: 'INVALID_DATA', result: result };
       const newPokemon = await PokemonModel.create({ input: result.data });
       res.status(201).json({
-        status: 'success',
         message: 'Pokémon creado con éxito',
         data: newPokemon,
       });
@@ -69,24 +70,6 @@ export class PokemonController {
           status: 'error',
           message: 'Datos de Pokémon inválidos',
           error: JSON.parse(error.result.error),
-        });
-      if (error.message === 'NOT_FOUND_ABILITY')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Habilidad no encontrada',
-          id: error.id,
-        });
-      if (error.message === 'NOT_FOUND_MOVE')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Movimiento no encontrado',
-          id: error.id,
-        });
-      if (error.message === 'MOVE_IS_NOT_MT')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Movimiento no es mt',
-          id: error.id,
         });
       const errorId = randomUUID();
       console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
@@ -103,12 +86,13 @@ export class PokemonController {
     try {
       const { id } = req.params;
       await PokemonModel.delete({ id });
-      res.json({ status: 'success', message: 'Pokémon eliminado' });
+      res.json({ message: 'Pokémon eliminado con éxito', id: id });
     } catch (error) {
       if (error.message === 'NOT_FOUND')
         return res.status(404).json({
           status: 'error',
           message: 'Pokémon no encontrado',
+          id: error.id,
         });
       const errorId = randomUUID();
       console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
@@ -131,7 +115,6 @@ export class PokemonController {
         input: result.data,
       });
       res.json({
-        status: 'success',
         message: 'Pokémon actualizado con éxito',
         data: updatedPokemon,
       });
@@ -142,34 +125,68 @@ export class PokemonController {
           message: 'Datos de Pokémon inválidos',
           error: JSON.parse(error.result.error),
         });
-      if (error.message === 'NOT_FOUND_ABILITY')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Habilidad no encontrada',
-          id: error.id,
-        });
-      if (error.message === 'NOT_FOUND_MOVE')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Movimiento no encontrado',
-          id: error.id,
-        });
-      if (error.message === 'MOVE_IS_NOT_MT')
-        return res.status(404).json({
-          status: 'error',
-          message: 'Movimiento no es mt',
-          id: error.id,
-        });
       if (error.message === 'NOT_FOUND')
         return res.status(404).json({
           status: 'error',
           message: 'Pokémon no encontrado',
+          id: error.id,
         });
       const errorId = randomUUID();
       console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
       res.status(500).json({
         status: 'error',
         message: 'Ocurrió un error al actualizar el Pokémon',
+        errorId: errorId,
+      });
+    }
+  }
+
+  static async createMany(req, res) {
+    try {
+      const data = readJSON(req.body.route);
+      const validated = [];
+      const nonValidated = [];
+
+      for (let pokemon of data) {
+        const result = validatePokemon(pokemon);
+        if (!result.success) {
+          pokemon.error = result.error;
+          nonValidated.push(pokemon);
+        } else validated.push(result.data);
+      }
+
+      if (nonValidated.length !== 0)
+        throw { message: 'NON_VALIDATED', nonValidated: nonValidated };
+
+      const inserted = await PokemonModel.createMany({
+        input: validated,
+      });
+
+      res.status(201).json({
+        count: data.length,
+        validated: validated.length,
+        inserted: inserted.length,
+      });
+    } catch (error) {
+      if (error.message === 'NON_VALIDATED')
+        return res.status(400).json({
+          status: 'error',
+          message: 'Datos de Pokémon inválidos',
+          nonValidated: error.nonValidated.map((pokemon) => {
+            return {
+              pokemon: pokemon.form
+                ? `#${pokemon.number.national} ${pokemon.name} ${pokemon.form}`
+                : `#${pokemon.number.national} ${pokemon.name}`,
+              error: pokemon.error,
+            };
+          }),
+        });
+
+      const errorId = randomUUID();
+      console.error(`🔴 Error Id:${errorId}, msj: `, error.message);
+      res.status(500).json({
+        status: 'error',
+        message: 'Ocurrió un insertar muchos Pokémon',
         errorId: errorId,
       });
     }
