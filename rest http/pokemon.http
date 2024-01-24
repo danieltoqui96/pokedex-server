@@ -9,59 +9,58 @@ POST http://localhost:3000/pokemon
 Content-Type: application/json
 
 {
-  "nationalNumber": 228,
-      "name": "Houndour",
-      "form": null,
-      "generation": "ii",
-      "types": [
-        "siniestro",
-        "fuego"
-      ],
-  "stats": {
-        "hp": 45,
-        "attack": 60,
-        "defense": 30,
-        "specialAttack": 80,
-        "specialDefense": 50,
-        "speed": 65
-      },
-  "height": 10.8,
-  "weight": 0.6,
-  "sprites": {
-        "base": "https://img.pokemondb.net/sprites/scarlet-violet/normal/houndour.png",
-        "home": {
-          "normal": "https://img.pokemondb.net/sprites/home/normal/houndour.png",
-          "shiny": "https://img.pokemondb.net/sprites/home/shiny/houndour.png"
-        }
-      },
-  "pokedex":{
-    "versions": [
-      { "name": "Paldea", "number": 25 },
-      { "name": "Noroteo", "number": 123 }
-    ],
-    "entries": [
-      {
-        "game": "Escarlata",
-        "info": "Tiene suficiente inteligencia para cazar en manada. Se comunica con los demás a través de diversos aullidos."
-      },
-      {
-        "game": "Púrpura",
-        "info": "Usa diferentes tipos de aullidos para comunicarse con los de su especie o para perseguir a su presa."
-      }
-    ]
+  "number": {
+    "national": 906,
+    "paldea": 1,
+    "noroteo": null,
+    "arandano": null
   },
-  "abilities": {
-        "normal": ["65767c7964ff462fe7ecd504", "65767caf5d1ec02331a6d159"],
-        "hidden": "65767ce25d1ec02331a6d15a"
-      },
-  "moves": {
-    "moveByLevel": [
-      { "move": "65767e8c3db9b748593e7c66", "level": 5 }, 
-      { "move": "65767dd85d1ec02331a6d15d", "level": 15 }
+  "name": "Sprigatito",
+  "form": null,
+  "sex_diff": false,
+  "category": "Gato planta",
+  "gen": "Novena",
+  "weight": 4.1,
+  "height": 0.4,
+  "male": 87.5,
+  "types": ["planta"],
+  "abilities": { "normal": ["Espesura"], "hidden": "Mutatipo" },
+  "stats": {
+    "hp": 40,
+    "attack": 61,
+    "defense": 54,
+    "specialAttack": 45,
+    "specialDefense": 45,
+    "speed": 65
+  },
+  "evs": {
+    "hp": 0,
+    "attack": 0,
+    "defense": 0,
+    "specialAttack": 0,
+    "specialDefense": 0,
+    "speed": 1
+  },
+  "damage": {
+    "damageX4": [],
+    "damageX2": ["bicho", "fuego", "hielo", "veneno", "volador"],
+    "damageX1": [
+      "acero",
+      "drag\u00f3n",
+      "fantasma",
+      "hada",
+      "lucha",
+      "normal",
+      "ps\u00edquico",
+      "roca",
+      "siniestro"
     ],
-    "movesByMt":["65767eb93db9b748593e7c67","65767e673db9b748593e7c65"],
-    "movesByEgg": ["65767dd85d1ec02331a6d15d"]
-  }
+    "damageX05": ["agua", "el\u00e9ctrico", "planta", "tierra"],
+    "damageX025": [],
+    "damageX0": []
+  },
+  "scarlet": "Su sedoso pelaje se asemeja en composici\u00f3n a las plantas. Se lava la cara con diligencia para que no se le seque.",
+  "purpure": "Su cuerpo desprende una dulce fragancia que embriaga a quien tiene a su alrededor. Esta se intensifica al exponerse a los rayos del sol."
 }
 
 ### Borrar un Pokémon

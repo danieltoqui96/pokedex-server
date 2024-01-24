@@ -42,67 +42,67 @@ export class PokemonModel {
 
   // Crear un nuevo Pokémon
   static async create({ input }) {
-    const { db: abilitiesDb, close: closeAbilitiesDb } = await connect(
-      'abilities'
-    );
-    input.abilities.normal = await Promise.all(
-      input.abilities.normal.map(async (id) => {
-        const ability = await abilitiesDb.findOne(
-          { _id: new ObjectId(id) },
-          { projection: { lastModified: 0 } }
-        );
-        if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
-        return ability;
-      })
-    );
-    input.abilities.hidden = await abilitiesDb.findOne(
-      { _id: new ObjectId(input.abilities.hidden) },
-      { projection: { lastModified: 0 } }
-    );
-    if (!input.abilities.hidden)
-      throw { message: 'NOT_FOUND_ABILITY', id: input.abilities.hidden };
-    await closeAbilitiesDb();
+    // const { db: abilitiesDb, close: closeAbilitiesDb } = await connect(
+    //   'abilities'
+    // );
+    // input.abilities.normal = await Promise.all(
+    //   input.abilities.normal.map(async (id) => {
+    //     const ability = await abilitiesDb.findOne(
+    //       { _id: new ObjectId(id) },
+    //       { projection: { lastModified: 0 } }
+    //     );
+    //     if (!ability) throw { message: 'NOT_FOUND_ABILITY', id: id };
+    //     return ability;
+    //   })
+    // );
+    // input.abilities.hidden = await abilitiesDb.findOne(
+    //   { _id: new ObjectId(input.abilities.hidden) },
+    //   { projection: { lastModified: 0 } }
+    // );
+    // if (!input.abilities.hidden)
+    //   throw { message: 'NOT_FOUND_ABILITY', id: input.abilities.hidden };
+    // await closeAbilitiesDb();
 
-    const { db: movesDb, close: closeMovesDb } = await connect('moves');
-    input.moves.moveByLevel = await Promise.all(
-      input.moves.moveByLevel.map(async (moveObj) => {
-        const move = await movesDb.findOne(
-          { _id: new ObjectId(moveObj.move) },
-          { projection: { lastModified: 0 } }
-        );
-        if (!move) throw { message: 'NOT_FOUND_MOVE', id: moveObj.move };
-        return {
-          move: move,
-          level: moveObj.level,
-        };
-      })
-    );
+    // const { db: movesDb, close: closeMovesDb } = await connect('moves');
+    // input.moves.moveByLevel = await Promise.all(
+    //   input.moves.moveByLevel.map(async (moveObj) => {
+    //     const move = await movesDb.findOne(
+    //       { _id: new ObjectId(moveObj.move) },
+    //       { projection: { lastModified: 0 } }
+    //     );
+    //     if (!move) throw { message: 'NOT_FOUND_MOVE', id: moveObj.move };
+    //     return {
+    //       move: move,
+    //       level: moveObj.level,
+    //     };
+    //   })
+    // );
 
-    // Validar que el movimiento sea mt
-    input.moves.movesByMt = await Promise.all(
-      input.moves.movesByMt.map(async (id) => {
-        const move = await movesDb.findOne(
-          { _id: new ObjectId(id) },
-          { projection: { lastModified: 0 } }
-        );
-        if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
-        if (move && move.mt === null)
-          throw { message: 'MOVE_IS_NOT_MT', id: id };
-        return move;
-      })
-    );
+    // // Validar que el movimiento sea mt
+    // input.moves.movesByMt = await Promise.all(
+    //   input.moves.movesByMt.map(async (id) => {
+    //     const move = await movesDb.findOne(
+    //       { _id: new ObjectId(id) },
+    //       { projection: { lastModified: 0 } }
+    //     );
+    //     if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
+    //     if (move && move.mt === null)
+    //       throw { message: 'MOVE_IS_NOT_MT', id: id };
+    //     return move;
+    //   })
+    // );
 
-    input.moves.movesByEgg = await Promise.all(
-      input.moves.movesByEgg.map(async (id) => {
-        const move = await movesDb.findOne(
-          { _id: new ObjectId(id) },
-          { projection: { lastModified: 0 } }
-        );
-        if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
-        return move;
-      })
-    );
-    await closeMovesDb();
+    // input.moves.movesByEgg = await Promise.all(
+    //   input.moves.movesByEgg.map(async (id) => {
+    //     const move = await movesDb.findOne(
+    //       { _id: new ObjectId(id) },
+    //       { projection: { lastModified: 0 } }
+    //     );
+    //     if (!move) throw { message: 'NOT_FOUND_MOVE', id: id };
+    //     return move;
+    //   })
+    // );
+    // await closeMovesDb();
 
     input.lastModified = new Date().toLocaleString();
     const { db, close } = await connect('pokemon');

@@ -1,14 +1,14 @@
 // Generaciones de los juegos de Pokémon
 export const generations = [
-  'i',
-  'ii',
-  'iii',
-  'iv',
-  'v',
-  'vi',
-  'vii',
-  'viii',
-  'ix',
+  'Primera',
+  'Segunda',
+  'Tercera',
+  'Cuarta',
+  'Quinta',
+  'Sexta',
+  'Séptima',
+  'Octava',
+  'Novena',
 ];
 
 // Tipos de Pokémon
