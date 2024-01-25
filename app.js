@@ -1,7 +1,6 @@
 // Importamos las dependencias
 import express, { json } from 'express';
 import { pokemonRouter } from './api/pokemon/pokemonRouter.js';
-import { movesRouter } from './api/moves/movesRouter.js';
 import { abilitiesRouter } from './api/abilities/abilitiesRouter.js';
 import { resTimeMiddleware } from './middlewares/resTimeMiddleware.js';
 
@@ -14,7 +13,6 @@ app.disable('x-powered-by');
 
 // Rutas de la API
 app.use('/pokemon', pokemonRouter);
-app.use('/moves', movesRouter);
 app.use('/abilities/', abilitiesRouter);
 
 // Inicio del servidor
